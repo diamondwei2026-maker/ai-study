@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+
+# Build output
+dist/
+build/
+
+# Vector store data
+vector_store/*.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Tesseract data
+tessdata/
