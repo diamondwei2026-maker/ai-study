@@ -78,6 +78,16 @@
 - `isPinned = true` 的任务必须在同一列表分组中排在非置顶任务之前
 - `nextReminderAt` 仅在仍存在未触发提醒时返回
 
+**Error (401)**:
+
+```json
+{
+  "code": 401,
+  "message": "未认证或登录已失效",
+  "data": null
+}
+```
+
 ---
 
 ## GET /api/reviews/tasks/:taskId
@@ -117,6 +127,16 @@
 {
   "code": 409,
   "message": "该复习任务状态已变化，请返回列表刷新后重试",
+  "data": null
+}
+```
+
+**Error (404)**:
+
+```json
+{
+  "code": 404,
+  "message": "复习任务不存在或已失效",
   "data": null
 }
 ```
@@ -178,6 +198,8 @@
 - 仅当 AI 判定、当前任务状态更新和后续节点创建全部成功时才返回 `200`
 - `result.judgment` 仅允许 `MASTERED` / `FUZZY` / `UNMASTERED`
 - `taskUpdate.nextDueAt` 必须等于 `followUpNodes` 中最早的 `dueAt`
+- `followUpNodes.nodeType` 仅允许 `reinforcement` / `initial` / `continuation`
+- 当当前任务已是最后一个既有计划节点且规则要求继续推进时，`followUpNodes` 中必须包含一个 30 天后的 `continuation` 节点
 
 **Error (400)**:
 
@@ -185,6 +207,26 @@
 {
   "code": 400,
   "message": "费曼输出不能为空，且仅支持纯文字内容",
+  "data": null
+}
+```
+
+**Error (401)**:
+
+```json
+{
+  "code": 401,
+  "message": "未认证或登录已失效",
+  "data": null
+}
+```
+
+**Error (404)**:
+
+```json
+{
+  "code": 404,
+  "message": "复习任务不存在或已失效",
   "data": null
 }
 ```

@@ -21,7 +21,7 @@
 
 ```bash
 cd server
-npm install mongoose express-validator jsonwebtoken bcryptjs pino pino-http
+npm install mongoose express-validator jsonwebtoken bcryptjs pino pino-http express-rate-limit
 npm run dev
 ```
 
@@ -38,8 +38,8 @@ PORT=3000
 ### 2. 整理后端分层
 
 1. 将现有 `server/src/index.ts` 中的启动、环境加载与 AI 初始化拆分到 `config/`、`utils/`、`services/`
-2. 补齐统一响应工具、错误中间件、JWT 鉴权中间件和结构化日志工具
-3. 扩展 `ReviewNode` 状态字段，并新增 `ReviewAttempt` 模型
+2. 补齐统一响应工具、错误中间件、JWT 鉴权中间件、Rate Limiting 中间件和结构化日志工具
+3. 复用 003 已落地的 `KnowledgePoint`、`SharedStandardAnswer` 和初始 `ReviewNode` 模型，并在其基础上扩展 `ReviewNode` 状态字段，新增 `ReviewAttempt` 模型
 4. 新增 `routes/review.ts`、`services/reviewListService.ts`、`services/reviewExecutionService.ts`、`services/reviewPlanningService.ts`、`services/reminderPolicyService.ts`
 
 ### 3. 前端准备
@@ -51,8 +51,8 @@ PORT=3000
 
 ### 4. 建议实施顺序
 
-1. 先补齐 001 的认证、响应封装、Mongo 连接与日志底座
-2. 扩展 003 的 `ReviewNode` 能力，完成复习列表接口和过期分级聚合
+1. 先确认 001 的认证、响应封装、Mongo 连接与日志底座已可复用；若未落地，先补齐最小联调占位契约
+2. 确认 003 的 `KnowledgePoint`、`SharedStandardAnswer` 与初始 `ReviewNode` 模型已可复用，再扩展 `ReviewNode` 能力完成复习列表接口和过期分级聚合
 3. 接入本地提醒策略与本地提醒元数据重建/取消逻辑
 4. 实现费曼页面、AI 判定接口和计划调整事务
 5. 完成风险提示、异常处理和从通知跳转到复习页的联调
@@ -71,7 +71,7 @@ PORT=3000
 
 1. 构造一个已过期 1 小时以上、24 小时以内的任务
 2. 验证该任务在列表中显示为短期过期，并收到过期后 1 小时提醒
-3. 完成复习后，验证未触发的后续提醒被取消，且计划按 A 方案生成补强或回退节点
+3. 完成复习后，验证未触发的后续提醒被取消，且计划按 FR-008 定义的渐进调整规则生成补强或回退节点
 
 ### 场景 C：长期过期重置计划
 
@@ -90,6 +90,17 @@ PORT=3000
 1. 模拟 OpenRouter 调用失败或事务写入失败
 2. 在费曼页面提交一段有效文本
 3. 验证页面提示失败、原任务仍可继续处理，且本地草稿可用于重试
+
+### 场景 F：未认证请求与契约校验
+
+1. 清空或伪造 `Authorization: Bearer <accessToken>`
+2. 调用 `GET /api/reviews/tasks`、`GET /api/reviews/tasks/:taskId` 或提交费曼输出
+3. 验证接口返回 `401`，前端提示登录失效且不更新任务状态
+
+### 场景 G：性能采样
+
+1. 分别对 `GET /api/reviews/tasks`、费曼提交、应用启动后的提醒重建和通知点击跳转进行多次采样
+2. 验证列表接口 p95 小于 800ms、提交链路 p95 小于 15 秒、提醒重建在 5 秒内完成、通知点击到落地页不超过 2 秒
 
 ## 关键文件目标
 

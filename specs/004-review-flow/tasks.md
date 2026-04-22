@@ -3,7 +3,9 @@
 **Input**: Design documents from `/specs/004-review-flow/`  
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/api.md ✅, quickstart.md ✅  
 **UI 设计稿**: client/UI/review-list.png、client/UI/feynman-output.png  
-**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单仅包含实现、门禁与手工验收相关任务。
+**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单包含实现、API 契约冒烟、性能采样、门禁与手工验收相关任务。
+
+**External Dependency**: 复用 001-user-login-account 提供的 accessToken 签发、持久化与 Bearer 鉴权契约，以及 003-knowledge-entry 已落地的 `KnowledgePoint`、`SharedStandardAnswer` 和初始 `ReviewNode` 模型；若前置模块未交付，本特性需先补齐最小联调占位契约后再进入 US1/US2/US3。
 
 **Organization**: 任务按用户故事分组，确保在完成共享基础设施后，每个故事都可以独立实现和验证。
 
@@ -21,9 +23,9 @@
 
 - [ ] T001 初始化 unibest 前端工程骨架并创建基础入口文件 client/package.json、client/pages.json、client/src/App.vue
 - [ ] T002 [P] 配置复习模块所需 UnoCSS、UnoCSS Icons 和页面视觉 token 于 client/uno.config.ts
-- [ ] T003 [P] 补齐复习模块所需后端依赖与脚本到 server/package.json
+- [ ] T003 [P] 补齐复习模块所需后端依赖（含 `express-rate-limit`）与脚本到 server/package.json
 - [ ] T004 [P] 创建复习模块与 AI 调用相关环境变量模板 server/.env.example
-- [ ] T005 配置工作区 lint、typecheck 与 build 命令到 package.json、client/package.json、server/package.json
+- [ ] T005 配置工作区 lint、typecheck、build 与 review API 契约冒烟命令到 package.json、client/package.json、server/package.json
 
 **Checkpoint**: client/ 与 server/ 的基础工程入口和质量门禁命令就绪。
 
@@ -31,23 +33,25 @@
 
 ## Phase 2: Foundational（阻塞性基础设施）
 
-**Purpose**: 所有用户故事共享的认证、请求层、后端分层、模型基础与路由骨架
+**Purpose**: 所有用户故事共享的认证契约、请求层、后端分层、模型扩展与路由骨架
 
 **⚠️ CRITICAL**: 在本阶段完成前，不应开始任何用户故事实现
 
-- [ ] T006 在 server/src/index.ts 中接入 `/api` 前缀、JSON/CORS 中间件、Mongo 启动与 review 路由注册骨架
+**前置依赖**: 001-user-login-account 已提供 accessToken 签发与客户端登录态存储；003-knowledge-entry 已提供 `KnowledgePoint`、`SharedStandardAnswer` 和初始 `ReviewNode` 模型；若未交付，先补齐最小可联调占位契约。
+
+- [ ] T006 在 server/src/index.ts 中接入 `/api` 前缀、JSON/CORS/Rate Limiting 中间件、Mongo 启动与 review 路由注册骨架
 - [ ] T007 [P] 创建环境配置与 MongoDB 连接管理 server/src/config/env.ts、server/src/config/db.ts
 - [ ] T008 [P] 创建统一响应封装与结构化日志工具 server/src/utils/response.ts、server/src/utils/logger.ts
-- [ ] T009 [P] 创建认证、参数校验与全局错误处理中间件 server/src/middlewares/auth.ts、server/src/middlewares/validate.ts、server/src/middlewares/errorHandler.ts
-- [ ] T010 [P] 落地 004 依赖的基础模型 server/src/models/User.ts、server/src/models/KnowledgePoint.ts、server/src/models/SharedStandardAnswer.ts
+- [ ] T009 [P] 创建对接 001 鉴权契约的认证、限流、参数校验与全局错误处理中间件 server/src/middlewares/auth.ts、server/src/middlewares/rateLimit.ts、server/src/middlewares/validate.ts、server/src/middlewares/errorHandler.ts
+- [ ] T010 [P] 对接并复用 001/003 已落地的 `User`、`KnowledgePoint`、`SharedStandardAnswer` 模型，补齐 004 所需引用与类型约束
 - [ ] T011 [P] 扩展复习节点与尝试模型 server/src/models/ReviewNode.ts、server/src/models/ReviewAttempt.ts
-- [ ] T012 [P] 创建带 Token 注入与 401 处理的统一请求层 client/src/utils/request.ts
+- [ ] T012 [P] 基于 001 登录态创建带 Token 注入与 401 处理的统一请求层 client/src/utils/request.ts
 - [ ] T013 [P] 创建复习领域类型与基础状态容器 client/src/types/review.ts、client/src/stores/review.ts
 - [ ] T014 [P] 创建复习列表、复习会话与通知调度 composable 骨架 client/src/composables/useReviewList.ts、client/src/composables/useReviewSession.ts、client/src/composables/useReviewNotifications.ts
 - [ ] T015 [P] 创建复习页面路由壳与通知工具占位 client/src/pages/review/index.vue、client/src/pages/review-session/index.vue、client/src/utils/notification.ts、client/pages.json
 - [ ] T016 创建 review 路由与服务骨架 server/src/routes/review.ts、server/src/services/reviewListService.ts、server/src/services/reviewExecutionService.ts、server/src/services/reviewPlanningService.ts、server/src/services/aiReviewService.ts、server/src/services/reminderPolicyService.ts
 
-**Checkpoint**: 复习页面与 `/api/reviews/*` 的共享骨架完成，用户故事可按优先级推进。
+**Checkpoint**: accessToken 契约、003 基础模型对接、Rate Limiting 与 `/api/reviews/*` 共享骨架完成，用户故事可按优先级推进。
 
 ---
 
@@ -60,9 +64,9 @@
 ### Implementation for User Story 1
 
 - [ ] T017 [US1] 在 server/src/services/aiReviewService.ts 中实现 `MASTERED/FUZZY/UNMASTERED` 三类结构化 AI 判定与原因生成逻辑
-- [ ] T018 [US1] 在 server/src/services/reviewPlanningService.ts 中实现 A 方案渐进调整矩阵、24 小时短期补强节点和 30 天延展节点生成逻辑
+- [ ] T018 [US1] 在 server/src/services/reviewPlanningService.ts 中实现 FR-008 定义的渐进调整矩阵、24 小时短期补强节点和最后既有计划节点后的 30 天延展节点生成逻辑
 - [ ] T019 [US1] 在 server/src/services/reviewExecutionService.ts 中实现费曼提交事务、`ReviewAttempt` 写入、当前 `ReviewNode` 状态更新和 follow-up 节点创建
-- [ ] T020 [US1] 在 server/src/routes/review.ts 中实现 `GET /api/reviews/tasks/:taskId` 和 `POST /api/reviews/tasks/:taskId/submit` 的鉴权接入、请求校验和 `200/400/404/409/502` 响应映射
+- [ ] T020 [US1] 在 server/src/routes/review.ts 中实现 `GET /api/reviews/tasks/:taskId` 和 `POST /api/reviews/tasks/:taskId/submit` 的鉴权接入、请求校验和 `200/400/401/404/409/502` 响应映射
 - [ ] T021 [P] [US1] 按 client/UI/feynman-output.png 像素级还原顶部导航、知识点标题区和进度线到 client/src/components/review/FeynmanHeader.vue
 - [ ] T022 [P] [US1] 按 client/UI/feynman-output.png 像素级还原过期提示卡与费曼要求卡到 client/src/components/review/FeynmanTaskBanner.vue、client/src/components/review/FeynmanPromptCard.vue
 - [ ] T023 [P] [US1] 按 client/UI/feynman-output.png 像素级还原输入区、字数提示、底部提交栏与结果弹层到 client/src/components/review/FeynmanComposer.vue、client/src/components/review/ReviewResultSheet.vue、client/src/pages/review-session/index.vue，覆盖默认、输入中、禁用、提交中和成功态
@@ -82,7 +86,7 @@
 
 - [ ] T025 [US2] 在 server/src/services/reviewListService.ts 中实现复习列表聚合、待复习/过期/全部分组、过期等级判定和排序规则
 - [ ] T026 [US2] 在 server/src/services/reminderPolicyService.ts 中实现到期前 30 分钟提醒、过期后 1 小时和 24 小时追加提醒、以及未触发提醒取消策略
-- [ ] T027 [US2] 在 server/src/routes/review.ts 中实现 `GET /api/reviews/tasks` 的查询参数解析、summary/reminderPolicy/tasks 响应映射
+- [ ] T027 [US2] 在 server/src/routes/review.ts 中实现 `GET /api/reviews/tasks` 的查询参数解析和 `200/401` + summary/reminderPolicy/tasks 响应映射
 - [ ] T028 [P] [US2] 在 client/src/utils/notification.ts、client/src/composables/useReviewNotifications.ts 中实现本地提醒调度、元数据持久化、应用启动重建和通知点击跳转
 - [ ] T029 [P] [US2] 按 client/UI/review-list.png 像素级还原渐变顶部区、标题、过期统计胶囊和分段切换栏到 client/src/components/review/ReviewListHeader.vue、client/src/components/review/ReviewTabs.vue
 - [ ] T030 [P] [US2] 按 client/UI/review-list.png 在 client/src/components/review/ReviewEmptyState.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/pages/review/index.vue 中接入空态区、主操作按钮、悬浮加号按钮和底部导航区，覆盖默认、按下、激活态、activeTab=review 和跳转 `topic-entry`
@@ -116,10 +120,10 @@
 **Purpose**: 收口视觉 token、日志、门禁与手工验收闭环
 
 - [ ] T038 [P] 在 client/uno.config.ts、client/src/components/review/FeynmanHeader.vue、client/src/components/review/FeynmanTaskBanner.vue、client/src/components/review/FeynmanPromptCard.vue、client/src/components/review/FeynmanComposer.vue、client/src/components/review/ReviewResultSheet.vue、client/src/components/review/ReviewTabs.vue、client/src/components/review/ReviewTaskCard.vue、client/src/components/review/ReviewEmptyState.vue、client/src/components/review/ReviewRiskBanner.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/pages/review/index.vue、client/src/pages/review-session/index.vue 中收口视觉 token 并移除硬编码色值/阴影
-- [ ] T039 [P] 在 server/src/services/aiReviewService.ts、server/src/services/reviewExecutionService.ts、server/src/services/reviewListService.ts、server/src/services/reminderPolicyService.ts、server/src/utils/logger.ts 中补齐 AI 判定、提醒重建、状态冲突和事务回滚的结构化日志
+- [ ] T039 [P] 在 server/src/services/aiReviewService.ts、server/src/services/reviewExecutionService.ts、server/src/services/reviewListService.ts、server/src/services/reminderPolicyService.ts、server/src/utils/logger.ts 中补齐 AI 判定、提醒重建、状态冲突、事务回滚和关键耗时指标的结构化日志
 - [ ] T040 [P] 更新复习全流程模块交付说明与手工验收步骤到 specs/004-review-flow/quickstart.md、specs/004-review-flow/plan.md
-- [ ] T041 [P] 在 package.json、client/package.json、server/package.json 上跑通 lint、typecheck 与 build 门禁并修复剩余缺口
-- [ ] T042 在 client/src/pages/review/index.vue、client/src/pages/review-session/index.vue、server/src/routes/review.ts、server/src/services/reviewExecutionService.ts 上跑通 quickstart 手工验收场景并修复遗留缺口
+- [ ] T041 [P] 在 package.json、client/package.json、server/package.json 上跑通 lint、typecheck、build 与 review API 契约冒烟门禁并修复剩余缺口
+- [ ] T042 在 client/src/pages/review/index.vue、client/src/pages/review-session/index.vue、server/src/routes/review.ts、server/src/services/reviewExecutionService.ts 上按 quickstart 与 contracts/api.md 跑通 `GET /api/reviews/tasks`、`GET /api/reviews/tasks/:taskId`、`POST /api/reviews/tasks/:taskId/submit` 的 `200/401/404/409/502` 手工验收/契约场景，并采样列表接口、提交链路、提醒重建和通知跳转时延
 
 ---
 
