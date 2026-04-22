@@ -19,7 +19,7 @@
 
 ```bash
 cd server
-npm install mongoose express-validator jsonwebtoken bcryptjs pino pino-http
+npm install mongoose express-validator jsonwebtoken bcryptjs pino pino-http express-rate-limit
 npm run dev
 ```
 
@@ -36,7 +36,7 @@ PORT=3000
 ### 2. 整理后端分层
 
 1. 将现有 `server/src/index.ts` 中的启动、环境加载与 AI 初始化拆分到 `config/`、`utils/`、`services/`
-2. 补齐统一响应工具、错误中间件、JWT 鉴权中间件和结构化日志工具
+2. 补齐统一响应工具、错误中间件、JWT 鉴权中间件、Rate Limiting 中间件和结构化日志工具
 3. 增加 `KnowledgePoint`、`SharedStandardAnswer`、`ReviewNode` 三个 Mongoose Schema
 4. 新增 `routes/topics.ts`、`services/topicService.ts`、`services/answerService.ts`、`services/reviewPlanService.ts`
 
@@ -87,6 +87,12 @@ PORT=3000
 1. 模拟 OpenRouter 调用失败或复习节点写入失败
 2. 验证接口返回失败
 3. 验证数据库中不存在面向当前用户的半成品知识点或不完整的 6 节点计划
+
+### 场景 F：未认证请求
+
+1. 清空或伪造 `Authorization: Bearer <accessToken>`
+2. 调用 `POST /api/topics` 或在录入页提交
+3. 验证接口返回 `401`，前端提示登录失效且不落库
 
 ## 关键文件目标
 

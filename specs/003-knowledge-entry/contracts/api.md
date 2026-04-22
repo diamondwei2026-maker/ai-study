@@ -43,6 +43,9 @@
 - `title` 去除首尾空白后长度必须为 1-30 字
 - `title` 只能包含纯文字内容，不允许链接、图片、富文本或 Markdown 痕迹
 - 客户端仅提交单条标题，不支持批量创建
+- 重复判定先以 normalizedTitle 精确匹配，其中 normalizedTitle 指标题去除首尾空白、压缩连续空格并统一常见全角/半角符号后的结果
+- 若共享答案命中或生成流程解析出 canonicalTitle，则再以 canonicalTitle 对当前用户既有知识点做精确匹配
+- 若未解析出 canonicalTitle，则仅依据 normalizedTitle 是否命中决定是否返回 `409`
 
 **Response (200)**:
 
@@ -134,6 +137,16 @@
 {
   "code": 400,
   "message": "标题需为 1-30 字纯文字内容",
+  "data": null
+}
+```
+
+**Error (401)**:
+
+```json
+{
+  "code": 401,
+  "message": "未认证或登录已失效",
   "data": null
 }
 ```

@@ -1,14 +1,13 @@
 <!--
   Sync Impact Report
   ==================================================
-  Version change: N/A → 1.0.0 (Initial adoption)
-  Modified principles: N/A (first version)
+  Version change: 1.0.0 → 1.1.0
+  Modified principles:
+    - Additional Constraints（前端文件命名规则按 unibest 路由约定澄清）
   Added sections:
-    - Core Principles (5 principles)
-    - Additional Constraints (frontend + backend)
-    - Development Workflow & Quality Gates
-    - Governance
-  Removed sections: N/A
+    - N/A
+  Removed sections:
+    - N/A
   Templates requiring updates:
     - .specify/templates/plan-template.md ✅ compatible
     - .specify/templates/spec-template.md ✅ compatible
@@ -121,7 +120,10 @@ MUST 严格遵守以下选型，不可变更：
 - 路由配置 MUST 遵循 unibest 约定式路由规范
 - 网络请求 MUST 通过统一的 `request` 封装模块发起，
   禁止直接调用 `uni.request` 或 `fetch`
-- 页面/组件文件命名 MUST 使用 PascalCase，
+- 页面源码目录 MUST 遵循 unibest 路由约定，
+  使用 `client/src/pages/<route>/index.vue` 结构，目录名与
+  路由片段保持 kebab-case 一致
+- 组件文件命名 MUST 使用 PascalCase，
   composables/utils 文件命名 MUST 使用 camelCase
 - 环境变量 MUST 通过 `.env.*` 文件管理，
   禁止在代码中硬编码环境相关值
@@ -189,4 +191,4 @@ MUST 严格遵守以下选型，不可变更：
 - **AI 代理约束**: 所有 AI 生成代码 MUST 无条件遵守
   本宪章全部条款，不得以 "AI 限制" 为由绕过任何规则
 
-**Version**: 1.0.0 | **Ratified**: 2026-04-20 | **Last Amended**: 2026-04-20
+**Version**: 1.1.0 | **Ratified**: 2026-04-20 | **Last Amended**: 2026-04-22

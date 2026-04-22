@@ -3,7 +3,9 @@
 **Input**: Design documents from `/specs/003-knowledge-entry/`  
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/api.md ✅, quickstart.md ✅  
 **UI 设计稿**: client/UI/create-topic.png  
-**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单仅包含实现、门禁与手工验收相关任务。
+**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单包含实现、API 契约冒烟、性能采样、门禁与手工验收相关任务。
+
+**External Dependency**: 复用 001-user-login-account 提供的 accessToken 签发、持久化与 Bearer 鉴权契约；若 001 未交付，本特性需先补齐最小占位契约后再进入 US2/US3。
 
 **Organization**: 任务按用户故事分组，确保在完成共享基础设施后，每个故事都可以独立实现和验证。
 
@@ -21,9 +23,9 @@
 
 - [ ] T001 初始化 unibest 前端工程骨架并创建基础入口文件 client/package.json、client/pages.json、client/src/App.vue
 - [ ] T002 [P] 配置知识点录入页所需 UnoCSS、UnoCSS Icons 和页面视觉 token 于 client/uno.config.ts
-- [ ] T003 [P] 补齐知识点录入模块所需后端依赖与脚本到 server/package.json
+- [ ] T003 [P] 补齐知识点录入模块所需后端依赖（含 `express-rate-limit`）与脚本到 server/package.json
 - [ ] T004 [P] 创建知识点录入与 AI 调用相关环境变量模板 server/.env.example
-- [ ] T005 配置工作区 lint、typecheck 与 build 命令到 package.json、client/package.json、server/package.json
+- [ ] T005 配置工作区 lint、typecheck、build 与 API 契约冒烟命令到 package.json、client/package.json、server/package.json
 
 **Checkpoint**: client/ 与 server/ 的基础工程入口和质量门禁命令就绪。
 
@@ -31,21 +33,23 @@
 
 ## Phase 2: Foundational（阻塞性基础设施）
 
-**Purpose**: 所有用户故事共享的认证、请求层、后端分层与路由骨架
+**Purpose**: 所有用户故事共享的认证契约、请求层、后端分层与路由骨架
 
 **⚠️ CRITICAL**: 在本阶段完成前，不应开始任何用户故事实现
 
-- [ ] T006 在 server/src/index.ts 中接入 `/api` 前缀、JSON/CORS 中间件、Mongo 启动与 topics 路由注册骨架
+**前置依赖**: 001-user-login-account 已提供 accessToken 签发与客户端登录态存储；若未交付，先补齐最小可联调占位契约。
+
+- [ ] T006 在 server/src/index.ts 中接入 `/api` 前缀、JSON/CORS/Rate Limiting 中间件、Mongo 启动与 topics 路由注册骨架
 - [ ] T007 [P] 创建环境配置与 MongoDB 连接管理 server/src/config/env.ts、server/src/config/db.ts
 - [ ] T008 [P] 创建统一响应封装与结构化日志工具 server/src/utils/response.ts、server/src/utils/logger.ts
-- [ ] T009 [P] 创建认证、参数校验与全局错误处理中间件 server/src/middlewares/auth.ts、server/src/middlewares/validate.ts、server/src/middlewares/errorHandler.ts
-- [ ] T010 [P] 定义当前特性依赖的用户模型 server/src/models/User.ts
-- [ ] T011 [P] 创建带 Token 注入与 401 处理的统一请求层 client/src/utils/request.ts
+- [ ] T009 [P] 创建对接 001 鉴权契约的认证、限流、参数校验与全局错误处理中间件 server/src/middlewares/auth.ts、server/src/middlewares/rateLimit.ts、server/src/middlewares/validate.ts、server/src/middlewares/errorHandler.ts
+- [ ] T010 [P] 复用或补齐当前特性依赖的用户模型 server/src/models/User.ts
+- [ ] T011 [P] 基于 001 登录态创建带 Token 注入与 401 处理的统一请求层 client/src/utils/request.ts
 - [ ] T012 [P] 创建知识点录入领域类型与基础状态容器 client/src/types/topic.ts、client/src/stores/knowledgeEntry.ts
 - [ ] T013 [P] 创建知识点录入 composable 骨架与唯一页面路由占位 client/src/composables/useTopicEntry.ts、client/src/pages/topic-entry/index.vue、client/pages.json
 - [ ] T014 创建 topics 路由与服务骨架 server/src/routes/topics.ts、server/src/services/topicService.ts、server/src/services/answerService.ts、server/src/services/reviewPlanService.ts
 
-**Checkpoint**: 录入页与 `/api/topics` 的共享骨架完成，用户故事可按优先级推进。
+**Checkpoint**: accessToken 契约、Rate Limiting、录入页与 `/api/topics` 的共享骨架完成，用户故事可按优先级推进。
 
 ---
 
@@ -78,10 +82,10 @@
 
 - [ ] T021 [P] [US2] 创建用户知识点与共享标准答案模型 server/src/models/KnowledgePoint.ts、server/src/models/SharedStandardAnswer.ts
 - [ ] T022 [P] [US2] 创建初始复习节点模型 server/src/models/ReviewNode.ts
-- [ ] T023 [US2] 在 server/src/services/answerService.ts 中实现共享答案命中、canonicalTitle/aliases 解析与 OpenRouter 标准答案生成链路
+- [ ] T023 [US2] 在 server/src/services/answerService.ts 中实现共享答案命中、canonicalTitle/aliases 解析、超时控制与 OpenRouter 标准答案生成链路
 - [ ] T024 [US2] 在 server/src/services/reviewPlanService.ts 中实现 `1h / 1d / 3d / 7d / 15d / 30d` 六个初始复习节点生成逻辑
 - [ ] T025 [US2] 在 server/src/services/topicService.ts 中实现知识点创建事务、共享答案关联、`firstReviewAt` 计算与成功结果聚合
-- [ ] T026 [US2] 在 server/src/routes/topics.ts 中实现 `POST /api/topics` 的鉴权接入、请求校验和 `200/400/502` 响应映射
+- [ ] T026 [US2] 在 server/src/routes/topics.ts 中实现 `POST /api/topics` 的鉴权接入、请求校验和 `200/400/401/409/502` 响应映射
 - [ ] T027 [P] [US2] 创建成功结果展示卡片 client/src/components/topic-entry/CreationResultCard.vue
 - [ ] T028 [US2] 在 client/src/composables/useTopicEntry.ts、client/src/stores/knowledgeEntry.ts、client/src/pages/topic-entry/index.vue 中接入提交 loading、成功态、标准答案摘要与最近一次待复习时间展示
 
@@ -97,7 +101,7 @@
 
 ### Implementation for User Story 3
 
-- [ ] T029 [US3] 在 server/src/services/topicService.ts 中实现 `normalizedTitle + canonicalTitle` 的语义近重复检测与 `409 existingKnowledgePoint` 返回
+- [ ] T029 [US3] 在 server/src/services/topicService.ts 中实现 `normalizedTitle` 精确匹配 + `canonicalTitle` 精确匹配回退的统一重复检测与 `409 existingKnowledgePoint` 返回
 - [ ] T030 [US3] 在 server/src/services/topicService.ts、server/src/services/reviewPlanService.ts 中补齐事务回滚、跨日跨月节点时序保护与部分成功防护
 - [ ] T031 [US3] 在 server/src/routes/topics.ts、server/src/utils/response.ts 中映射重复创建、AI 失败和计划初始化失败的错误码与提示文案
 - [ ] T032 [P] [US3] 在 client/src/components/topic-entry/TopicTitleForm.vue、client/src/components/topic-entry/CreationResultCard.vue 中实现字段错误、重复提示和失败反馈样式
@@ -112,10 +116,10 @@
 **Purpose**: 收口视觉 token、日志、门禁与手工验收闭环
 
 - [ ] T034 [P] 在 client/uno.config.ts、client/src/components/topic-entry/TopicEntryNavBar.vue、client/src/components/topic-entry/TopicTitleForm.vue、client/src/components/topic-entry/TopicEntryNoticeCard.vue、client/src/components/topic-entry/TopicEntryFooterBar.vue 中收口页面视觉 token 并移除硬编码色值/阴影
-- [ ] T035 [P] 在 server/src/services/answerService.ts、server/src/services/topicService.ts、server/src/utils/logger.ts 中补齐 AI 调用、重复命中与事务失败的结构化日志
+- [ ] T035 [P] 在 server/src/services/answerService.ts、server/src/services/topicService.ts、server/src/utils/logger.ts 中补齐 AI 调用耗时、重复命中、事务失败的结构化日志与性能采样字段
 - [ ] T036 [P] 更新知识点录入模块交付说明与手工验收步骤到 specs/003-knowledge-entry/quickstart.md、specs/003-knowledge-entry/plan.md
-- [ ] T037 [P] 在 package.json、client/package.json、server/package.json 上跑通 lint、typecheck 与 build 门禁并修复剩余缺口
-- [ ] T038 在 client/src/pages/topic-entry/index.vue、server/src/routes/topics.ts、server/src/services/topicService.ts 上跑通 quickstart 手工验收场景并修复遗留缺口
+- [ ] T037 [P] 在 package.json、client/package.json、server/package.json 上跑通 lint、typecheck、build 与 API 契约冒烟门禁并修复剩余缺口
+- [ ] T038 在 client/src/pages/topic-entry/index.vue、server/src/routes/topics.ts、server/src/services/topicService.ts 上按 quickstart 与 contracts/api.md 跑通 `200/401/409/502` 手工验收/契约场景，并对共享答案复用/新生成两条路径采样响应耗时
 
 ---
 
