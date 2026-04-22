@@ -1,22 +1,22 @@
 # Implementation Plan: 首页模块
 
-**Branch**: `002-home-page` | **Date**: 2026-04-21 | **Spec**: [spec.md](spec.md)
+**Branch**: `002-home-page-module` | **Date**: 2026-04-21 | **Spec**: [spec.md](spec.md)
 **Input**: Feature specification from `specs/002-home-page-module/spec.md`
 
 ## Summary
 
-在遵循宪章锁定技术栈的前提下，实现首页作为 APP 核心入口的状态总览、关键操作入口和跨模块引导能力。技术方案采用服务端聚合首页读模型，提供统一 REST 接口；前端在 `client/` 下初始化符合宪章的 unibest 工程并以 Pinia + composables 实现首页渲染与跳转逻辑，同时复用共享底部导航与知识点录入悬浮按钮，并将知识点入口统一收口到 `topic-entry` 路由。
+在遵循宪章锁定技术栈的前提下，实现首页作为 APP 核心入口的状态总览、关键操作入口和跨模块引导能力。技术方案采用服务端聚合首页读模型，提供统一 REST 接口；前端在 `client/` 下初始化符合宪章的 unibest 工程并以 Pinia + composables 实现首页渲染与跳转逻辑，同时复用共享底部导航与知识点录入悬浮按钮，并将知识点入口统一收口到 `topic-entry` 路由。本期首页导航目标限定为 `topic-entry` 与复习流程，不扩展学习记录入口。
 
 ## Technical Context
 
 **Language/Version**: TypeScript（strict mode）, Node.js, Vue 3 `<script setup lang="ts">`  
 **Primary Dependencies**: Express 5, cors, dotenv（现有后端）；Mongoose, express-validator, jsonwebtoken, bcryptjs（沿用 001 基础设施）；unibest, Pinia, wot-design-uni, UnoCSS, UnoCSS Icons（前端，按宪章初始化）  
 **Storage**: MongoDB（用户/复习/行为事件数据）；客户端本地存储用于登录态与首页最近一次成功快照  
-**Testing**: `tsc` 编译校验、API 契约校验、基于 spec 的手工验收场景；实现阶段需补齐 client/server 的 lint 脚本以满足宪章门禁  
+**Testing**: `tsc` 编译校验、基于 `contracts/api.md` 的契约对照校验、dashboard 接口采样计时、首页首屏关键操作可用时延采样、基于 spec 的手工验收场景；SC-003/SC-005 作为上线后观测指标，通过首页行为埋点与用户反馈统计跟踪  
 **Target Platform**: uni-app 移动端 APP + Node.js REST API 服务  
 **Project Type**: Mobile App + Web Service  
 **Performance Goals**: 首页 dashboard 接口在常规网络下 p95 小于 500ms；进入首页后 2 秒内展示可操作入口；满足 spec 中 5 秒识别任务状态与 10 秒触发关键操作目标  
-**Constraints**: 必须遵守宪章锁定栈；首页状态不可用时仍保留关键入口；不得在页面中堆叠业务逻辑；当前仓库尚无前端工程与 lint 配置，需在实现阶段补齐  
+**Constraints**: 必须遵守宪章锁定栈；首页状态不可用时仍保留关键入口；不得在页面中堆叠业务逻辑；本期导航范围限定为 `topic-entry` 与复习流程；当前仓库尚无前端工程与 lint 配置，需在实现阶段补齐  
 **Scale/Scope**: 面向 10k 级活跃用户；本特性范围包含 1 个首页聚合接口、1 个首页行为记录接口、1 个首页页面、若干首页组件/store/composable，以及对既有认证基础设施的依赖接入
 
 ## Constitution Check
@@ -108,6 +108,12 @@ client/
 ```
 
 **Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `client/` 下补齐真实前端工程，并保留 `client/UI/` 作为设计稿资源目录。首页后端继续采用 `routes/ -> services/ -> models/` 分层；首页前端采用 `pages/ + components/home + components/shared/navigation + composables + stores` 分层，以满足宪章关于路由、逻辑拆分和统一请求封装的要求。知识点录入目标页统一使用 `topic-entry` 目录命名，首页不再维护独立的 `create-topic` 源码路由。
+
+## Validation Strategy
+
+- **Contract Validation**: 逐项对照 `specs/002-home-page-module/contracts/api.md` 校验 `GET /api/home/dashboard` 与 `POST /api/home/action-events` 的字段、错误码和兜底约束。
+- **Performance Validation**: 本地或测试环境对 dashboard 接口连续采样 10 次并记录 p95，目标小于 500ms；首页从页面显示到关键操作区可点击的耗时目标小于 2 秒。
+- **Success Criteria Measurement**: SC-001 与 SC-002 通过 quickstart 中的手工定时验收记录；SC-003 作为上线后指标，基于 `HomeActionEvent` 埋点按周复盘；SC-005 需在上线前记录“找不到下一步操作”反馈基线，并在上线后按周汇总同口径反馈进行对比。
 
 ## Complexity Tracking
 

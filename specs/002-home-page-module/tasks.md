@@ -3,7 +3,7 @@
 **Input**: Design documents from `/specs/002-home-page-module/`
 **Prerequisites**: plan.md ✅, spec.md ✅, research.md ✅, data-model.md ✅, contracts/api.md ✅, quickstart.md ✅
 **UI 设计稿**: client/UI/home.png
-**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单仅包含实现与手工验收相关任务。
+**Tests**: 当前规格未要求 TDD 或自动化测试任务，本清单包含实现、手工验收、API 契约对照与性能/指标验证准备任务。
 
 **Organization**: 任务按用户故事分组，确保在完成共享基础设施后，每个故事都可以独立实现和验证。
 
@@ -35,7 +35,8 @@
 
 **⚠️ CRITICAL**: 在本阶段完成前，不应开始任何用户故事实现
 
-- [ ] T006 在 server/src/index.ts 中接入 MongoDB 启动、全局中间件与首页路由注册
+**执行顺序说明**: Phase 2 以内显式依赖为准，T006 虽编号较早，但必须在 T007、T008、T015 完成后执行
+
 - [ ] T007 [P] 创建统一响应封装与结构化日志工具 server/src/utils/response.ts、server/src/utils/logger.ts
 - [ ] T008 [P] 创建认证、参数校验与全局错误处理中间件 server/src/middlewares/auth.ts、server/src/middlewares/validate.ts、server/src/middlewares/errorHandler.ts
 - [ ] T009 [P] 定义首页聚合依赖的用户模型 server/src/models/User.ts
@@ -45,6 +46,7 @@
 - [ ] T013 [P] 定义首页领域类型与基础状态结构 client/src/types/home.ts、client/src/stores/home.ts
 - [ ] T014 [P] 创建首页数据与导航 composable 骨架 client/src/composables/useHome.ts、client/src/composables/useNavigation.ts
 - [ ] T015 创建首页页面壳与首页 API 骨架 client/src/pages/home/index.vue、client/pages.json、server/src/routes/home.ts、server/src/services/homeService.ts
+- [ ] T006 在 T007、T008、T015 完成后，于 server/src/index.ts 中接入 MongoDB 启动、全局中间件与首页路由注册
 
 **Checkpoint**: 首页共享骨架完成，用户故事可按优先级推进
 
@@ -113,8 +115,11 @@
 
 - [ ] T034 [P] 在 client/uno.config.ts、client/src/components/home/HomeHeroHeader.vue、client/src/components/home/HomeStatusCard.vue、client/src/components/home/HomeGuidanceBanner.vue、client/src/components/home/HomePrimaryActionCard.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue 中收口首页视觉 token 并移除硬编码样式值
 - [ ] T035 [P] 在 server/src/services/homeService.ts、server/src/utils/logger.ts 中补齐 dashboard 读取失败与 action-event 写入失败的结构化日志
-- [ ] T036 [P] 更新首页模块交付说明与手工验收步骤到 specs/002-home-page-module/quickstart.md、specs/002-home-page-module/plan.md
+- [ ] T036 [P] 更新首页模块交付说明、成功标准测量口径与手工验收步骤到 specs/002-home-page-module/quickstart.md、specs/002-home-page-module/plan.md
 - [ ] T037 在 client/src/pages/home/index.vue、server/src/routes/home.ts 上跑通 quickstart 手工验收场景并修复遗留缺口
+- [ ] T038 [P] 依据 specs/002-home-page-module/contracts/api.md 对照 server/src/routes/home.ts、server/src/services/homeService.ts 完成 dashboard 与 action-events 契约校验
+- [ ] T039 [P] 对 GET /api/home/dashboard 执行 10 次本地采样并记录 p95，同时记录首页首屏关键操作可点击耗时，结果回填 specs/002-home-page-module/quickstart.md
+- [ ] T040 [P] 记录 SC-005 上线前反馈基线，并在 specs/002-home-page-module/quickstart.md、specs/002-home-page-module/plan.md 中固化周度复盘口径与输出物
 
 ---
 
@@ -159,6 +164,7 @@ Phase 6 Polish
 - **US2**: T024、T025、T026 可并行
 - **US3**: T030、T031 可并行
 - **Polish**: T034、T035、T036 可并行
+- **Polish**: T034、T035、T036、T038、T039、T040 可并行
 
 ---
 
@@ -210,5 +216,6 @@ T026 client/src/pages/review/index.vue + client/src/pages/topic-entry/index.vue
 - 所有首页视觉实现以 client/UI/home.png 为唯一设计基准
 - 所有前端样式必须遵守 constitution 中关于 UnoCSS token、wot-design-uni 复用和禁止硬编码色值/阴影的约束
 - 当前未加入自动化测试任务；验收以 quickstart.md 手工场景和设计稿对照为主
+- 契约校验、性能采样与 SC-001/SC-002 测量属于本期交付的一部分；SC-003 与 SC-005 作为上线后指标跟踪
 - 底部导航与悬浮知识点录入按钮必须复用 client/src/components/shared/navigation/，不得新增 home 专属副本
 - 对共享文件 client/src/pages/home/index.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、server/src/services/homeService.ts 的改动需按阶段合并，避免跨故事互相覆盖
