@@ -7,6 +7,7 @@
 ## 前置条件
 
 - 001 用户登录与账号管理基础设施已按设计落地，至少包含认证中间件、统一响应封装与 MongoDB 连接
+- 003 知识点录入页已统一注册为 `client/src/pages/topic-entry/index.vue`，或已提供同名占位页供首页导航接入
 - 本地可用的 MongoDB 实例
 - Node.js 与 npm 环境可用
 - `client/UI/home.png` 作为首页视觉稿参考
@@ -42,7 +43,7 @@ PORT=3000
 2. 新增首页聚合接口 `GET /api/home/dashboard`
 3. 新增首页行为记录接口 `POST /api/home/action-events`
 4. 在前端实现首页页面、首页 store 和 `useHome` composable
-5. 接入关键入口跳转到知识点新建与复习流程
+5. 复用共享底部导航与知识点录入悬浮按钮，并将首页关键入口统一接入 `topic-entry` 与复习流程
 
 ## 手工验收场景
 
@@ -51,12 +52,14 @@ PORT=3000
 1. 使用已登录且有待复习数据的用户进入首页
 2. 验证首页展示待复习数、今日进度、逾期提示
 3. 点击“开始复习”，验证能够进入复习模块
+4. 验证底部导航当前激活项为首页，点击右下角知识点录入按钮进入 `topic-entry`
 
 ### 场景 B：无待复习任务
 
 1. 使用无待复习数据的用户进入首页
 2. 验证首页展示空态文案
 3. 验证“新建知识点”可正常点击，“开始复习”给出明确反馈而非报错
+4. 验证底部导航与右下角知识点录入按钮仍然可用
 
 ### 场景 C：弱网或接口失败
 
@@ -71,6 +74,8 @@ server/src/routes/home.ts
 server/src/services/homeService.ts
 server/src/models/HomeActionEvent.ts
 client/src/pages/home/index.vue
+client/src/components/shared/navigation/AppTabBar.vue
+client/src/components/shared/navigation/KnowledgeEntryFab.vue
 client/src/stores/home.ts
 client/src/composables/useHome.ts
 ```

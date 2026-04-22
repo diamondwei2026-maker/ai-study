@@ -5,7 +5,7 @@
 
 ## Summary
 
-在遵循宪章锁定技术栈的前提下，实现知识点录入页的一次性创建流程：用户输入纯文字标题后，通过单个受鉴权的 REST 接口完成标题校验、共享标准答案复用或生成、语义近重复判定，以及 6 个固定初始复习节点初始化。后端采用 Express + Mongoose + OpenRouter 服务分层落地，前端采用 unibest 页面 + Pinia/composable 组织录入交互；由于当前仓库仍缺失 001 认证基础设施、Mongo 连接分层和真实 `client/` 工程，实施顺序需先补齐底座再落本特性。
+在遵循宪章锁定技术栈的前提下，实现知识点录入页的一次性创建流程：用户输入纯文字标题后，通过单个受鉴权的 REST 接口完成标题校验、共享标准答案复用或生成、语义近重复判定，以及 6 个固定初始复习节点初始化。后端采用 Express + Mongoose + OpenRouter 服务分层落地，前端采用 unibest 页面 + Pinia/composable 组织录入交互，并将 `topic-entry` 固定为首页、复习列表和个人中心共享知识点录入入口的唯一目标路由；由于当前仓库仍缺失 001 认证基础设施、Mongo 连接分层和真实 `client/` 工程，实施顺序需先补齐底座再落本特性。
 
 ## Technical Context
 
@@ -88,7 +88,7 @@ client/
 ├── uno.config.ts
 └── src/
     ├── pages/
-    │   └── topic-entry/
+    │   └── topic-entry/      # 首页/复习列表/个人中心共享录入目标页
     │       └── index.vue
     ├── components/
     │   └── topic-entry/
@@ -104,7 +104,7 @@ client/
         └── topic.ts
 ```
 
-**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `server/src/` 内补齐宪章要求的配置、模型、路由、服务、中间件与工具分层；在 `client/` 根目录初始化真实 unibest 工程并保留 `client/UI/` 作为设计稿资源目录。知识点录入后端以 `topics` 路由为入口，分别下沉至 `topicService`、`answerService` 与 `reviewPlanService`；前端则以 `pages/ + components/ + composables/ + stores/` 分层承载输入校验、提交流程与结果展示。
+**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `server/src/` 内补齐宪章要求的配置、模型、路由、服务、中间件与工具分层；在 `client/` 根目录初始化真实 unibest 工程并保留 `client/UI/` 作为设计稿资源目录。知识点录入后端以 `topics` 路由为入口，分别下沉至 `topicService`、`answerService` 与 `reviewPlanService`；前端则以 `pages/ + components/ + composables/ + stores/` 分层承载输入校验、提交流程与结果展示，并将 `topic-entry` 固定为唯一源码目录名，避免与设计稿名 `create-topic` 再次漂移。
 
 ## Complexity Tracking
 

@@ -85,7 +85,7 @@
 - [ ] T027 [US2] 在 server/src/routes/review.ts 中实现 `GET /api/reviews/tasks` 的查询参数解析、summary/reminderPolicy/tasks 响应映射
 - [ ] T028 [P] [US2] 在 client/src/utils/notification.ts、client/src/composables/useReviewNotifications.ts 中实现本地提醒调度、元数据持久化、应用启动重建和通知点击跳转
 - [ ] T029 [P] [US2] 按 client/UI/review-list.png 像素级还原渐变顶部区、标题、过期统计胶囊和分段切换栏到 client/src/components/review/ReviewListHeader.vue、client/src/components/review/ReviewTabs.vue
-- [ ] T030 [P] [US2] 按 client/UI/review-list.png 像素级还原空态区、主操作按钮、悬浮加号按钮和底部导航区到 client/src/components/review/ReviewEmptyState.vue、client/src/components/review/ReviewFloatingCreateButton.vue、client/src/components/review/ReviewBottomNavBar.vue，覆盖默认、按下和激活态
+- [ ] T030 [P] [US2] 按 client/UI/review-list.png 在 client/src/components/review/ReviewEmptyState.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/pages/review/index.vue 中接入空态区、主操作按钮、悬浮加号按钮和底部导航区，覆盖默认、按下、激活态、activeTab=review 和跳转 `topic-entry`
 - [ ] T031 [P] [US2] 按 client/UI/review-list.png 扩展可复用的任务卡样式到 client/src/components/review/ReviewTaskCard.vue，覆盖待复习、短期过期、中期过期和长期过期视觉状态
 - [ ] T032 [US2] 在 client/src/composables/useReviewList.ts、client/src/stores/review.ts、client/src/pages/review/index.vue 中接入列表拉取、tab 切换、空态切换、任务点击进入费曼页和通知返回后的刷新逻辑
 
@@ -115,7 +115,7 @@
 
 **Purpose**: 收口视觉 token、日志、门禁与手工验收闭环
 
-- [ ] T038 [P] 在 client/uno.config.ts、client/src/components/review/FeynmanHeader.vue、client/src/components/review/FeynmanTaskBanner.vue、client/src/components/review/FeynmanPromptCard.vue、client/src/components/review/FeynmanComposer.vue、client/src/components/review/ReviewResultSheet.vue、client/src/components/review/ReviewTabs.vue、client/src/components/review/ReviewTaskCard.vue、client/src/components/review/ReviewEmptyState.vue、client/src/components/review/ReviewRiskBanner.vue、client/src/pages/review/index.vue、client/src/pages/review-session/index.vue 中收口视觉 token 并移除硬编码色值/阴影
+- [ ] T038 [P] 在 client/uno.config.ts、client/src/components/review/FeynmanHeader.vue、client/src/components/review/FeynmanTaskBanner.vue、client/src/components/review/FeynmanPromptCard.vue、client/src/components/review/FeynmanComposer.vue、client/src/components/review/ReviewResultSheet.vue、client/src/components/review/ReviewTabs.vue、client/src/components/review/ReviewTaskCard.vue、client/src/components/review/ReviewEmptyState.vue、client/src/components/review/ReviewRiskBanner.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/pages/review/index.vue、client/src/pages/review-session/index.vue 中收口视觉 token 并移除硬编码色值/阴影
 - [ ] T039 [P] 在 server/src/services/aiReviewService.ts、server/src/services/reviewExecutionService.ts、server/src/services/reviewListService.ts、server/src/services/reminderPolicyService.ts、server/src/utils/logger.ts 中补齐 AI 判定、提醒重建、状态冲突和事务回滚的结构化日志
 - [ ] T040 [P] 更新复习全流程模块交付说明与手工验收步骤到 specs/004-review-flow/quickstart.md、specs/004-review-flow/plan.md
 - [ ] T041 [P] 在 package.json、client/package.json、server/package.json 上跑通 lint、typecheck 与 build 门禁并修复剩余缺口
@@ -180,7 +180,7 @@ T023 client/src/components/review/FeynmanComposer.vue + client/src/components/re
 ```text
 T028 client/src/utils/notification.ts + client/src/composables/useReviewNotifications.ts
 T029 client/src/components/review/ReviewListHeader.vue + client/src/components/review/ReviewTabs.vue
-T030 client/src/components/review/ReviewEmptyState.vue + client/src/components/review/ReviewFloatingCreateButton.vue + client/src/components/review/ReviewBottomNavBar.vue
+T030 client/src/components/review/ReviewEmptyState.vue + client/src/components/shared/navigation/KnowledgeEntryFab.vue + client/src/components/shared/navigation/AppTabBar.vue + client/src/pages/review/index.vue
 T031 client/src/components/review/ReviewTaskCard.vue
 ```
 
@@ -221,5 +221,6 @@ T036 client/src/composables/useReviewNotifications.ts + client/src/utils/notific
 
 - 所有复习模块视觉实现以 client/UI/feynman-output.png 和 client/UI/review-list.png 为唯一设计基准
 - 所有前端样式必须遵守 constitution 中关于 UnoCSS token、wot-design-uni 复用和禁止硬编码色值/阴影的约束
+- 底部导航与悬浮知识点录入按钮必须复用 client/src/components/shared/navigation/，不得新增 review 专属副本
 - 当前未加入自动化测试任务；验收以 quickstart.md 手工场景、API 合同和设计稿对照为主
 - 对共享文件 client/src/pages/review/index.vue、client/src/pages/review-session/index.vue、client/src/composables/useReviewList.ts、client/src/composables/useReviewSession.ts、server/src/routes/review.ts、server/src/services/reviewExecutionService.ts 的改动需按阶段合并，避免跨故事互相覆盖

@@ -5,7 +5,7 @@
 
 ## Summary
 
-实现 APP 用户注册、登录（手机号+验证码/密码）、登录状态管理（JWT + Refresh Token）、个人中心（资料编辑、头像上传、换绑手机号）、密码管理及用户数据隔离。后端使用 Express + MongoDB (Mongoose) + JWT，前端使用 unibest + Vue 3 + Pinia。
+实现 APP 用户注册、登录（手机号+验证码/密码）、登录状态管理（JWT + Refresh Token）、个人中心（资料编辑、头像上传、换绑手机号）、密码管理及用户数据隔离。后端使用 Express + MongoDB (Mongoose) + JWT，前端使用 unibest + Vue 3 + Pinia；在个人中心交付时同步抽取首页、复习列表与个人中心共用的底部导航和知识点录入悬浮按钮契约。
 
 ## Technical Context
 
@@ -84,6 +84,11 @@ client/
 │   ├── pages/
 │   │   ├── login/            # 登录/注册页
 │   │   └── mine/             # 个人中心页
+│   ├── components/
+│   │   └── shared/
+│   │       └── navigation/
+│   │           ├── AppTabBar.vue
+│   │           └── KnowledgeEntryFab.vue
 │   ├── stores/               # Pinia 状态管理
 │   │   └── user.ts
 │   ├── composables/          # 组合式函数
@@ -93,7 +98,7 @@ client/
 │       └── request.ts        # 统一请求封装（Token 管理）
 ```
 
-**Structure Decision**: 采用 client/server 分离结构（已有），符合项目现有布局。后端按 models/routes/services/middlewares/utils 分层，遵循宪章中"路由按模块拆分、业务逻辑拆分至 services 层"的要求。
+**Structure Decision**: 采用 client/server 分离结构（已有），符合项目现有布局。后端按 models/routes/services/middlewares/utils 分层，遵循宪章中"路由按模块拆分、业务逻辑拆分至 services 层"的要求；前端在个人中心落地时同步沉淀 `client/src/components/shared/navigation/`，供首页、复习列表和个人中心复用，知识点录入目标路由统一命名为 `topic-entry`。
 
 ## Complexity Tracking
 

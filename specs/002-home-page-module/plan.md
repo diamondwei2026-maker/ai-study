@@ -5,7 +5,7 @@
 
 ## Summary
 
-在遵循宪章锁定技术栈的前提下，实现首页作为 APP 核心入口的状态总览、关键操作入口和跨模块引导能力。技术方案采用服务端聚合首页读模型，提供统一 REST 接口；前端在 `client/` 下初始化符合宪章的 unibest 工程并以 Pinia + composables 实现首页渲染与跳转逻辑，同时为关键入口补充行为记录以支撑后续效果评估。
+在遵循宪章锁定技术栈的前提下，实现首页作为 APP 核心入口的状态总览、关键操作入口和跨模块引导能力。技术方案采用服务端聚合首页读模型，提供统一 REST 接口；前端在 `client/` 下初始化符合宪章的 unibest 工程并以 Pinia + composables 实现首页渲染与跳转逻辑，同时复用共享底部导航与知识点录入悬浮按钮，并将知识点入口统一收口到 `topic-entry` 路由。
 
 ## Technical Context
 
@@ -88,9 +88,13 @@ client/
 │   ├── pages/
 │   │   ├── home/
 │   │   ├── review/
-│   │   └── create-topic/
+│   │   └── topic-entry/
 │   ├── components/
-│   │   └── home/
+│   │   ├── home/
+│   │   └── shared/
+│   │       └── navigation/
+│   │           ├── AppTabBar.vue
+│   │           └── KnowledgeEntryFab.vue
 │   ├── composables/
 │   │   ├── useHome.ts
 │   │   └── useNavigation.ts
@@ -103,7 +107,7 @@ client/
 │       └── home.ts
 ```
 
-**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `client/` 下补齐真实前端工程，并保留 `client/UI/` 作为设计稿资源目录。首页后端继续采用 `routes/ -> services/ -> models/` 分层；首页前端采用 `pages/ + components/ + composables/ + stores/` 分层，以满足宪章关于路由、逻辑拆分和统一请求封装的要求。
+**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `client/` 下补齐真实前端工程，并保留 `client/UI/` 作为设计稿资源目录。首页后端继续采用 `routes/ -> services/ -> models/` 分层；首页前端采用 `pages/ + components/home + components/shared/navigation + composables + stores` 分层，以满足宪章关于路由、逻辑拆分和统一请求封装的要求。知识点录入目标页统一使用 `topic-entry` 目录命名，首页不再维护独立的 `create-topic` 源码路由。
 
 ## Complexity Tracking
 

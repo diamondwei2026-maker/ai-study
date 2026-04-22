@@ -8,6 +8,7 @@
 
 - 001 用户登录与账号管理基础设施已按设计落地，至少包含 JWT 鉴权、中间件、统一响应封装和 MongoDB 连接
 - 003 知识点录入模块已按设计落地，至少包含 `KnowledgePoint`、`SharedStandardAnswer` 和初始 `ReviewNode` 数据
+- 003 知识点录入页统一注册为 `client/src/pages/topic-entry/index.vue`，供共享知识点录入按钮跳转
 - 本地可用的 MongoDB 实例，且支持 Mongoose session 事务（推荐单节点副本集）
 - Node.js 与 npm 环境可用
 - OpenRouter 可用的模型与 API Key
@@ -46,7 +47,7 @@ PORT=3000
 1. 在 `client/` 根目录初始化 unibest + Vue 3 + TypeScript 工程
 2. 接入 Pinia、wot-design-uni、UnoCSS、UnoCSS Icons
 3. 配置统一 `request` 封装与本地通知调度工具
-4. 新增 `client/src/pages/review/index.vue` 和 `client/src/pages/review-session/index.vue`
+4. 新增 `client/src/pages/review/index.vue` 和 `client/src/pages/review-session/index.vue`，并在复习列表页接入共享底部导航与知识点录入悬浮按钮
 
 ### 4. 建议实施顺序
 
@@ -64,6 +65,7 @@ PORT=3000
 2. 点击任务进入费曼页面，输入合法纯文字内容并提交
 3. 验证系统返回判定结果与原因，更新任务状态，并生成新的下次复习时间
 4. 验证用户返回列表后可看到刷新后的任务状态与排序
+5. 验证复习列表页底部导航激活项为复习，点击右下角知识点录入按钮进入 `topic-entry`
 
 ### 场景 B：短期过期任务与追加提醒
 
@@ -102,6 +104,8 @@ server/src/services/reminderPolicyService.ts
 server/src/services/aiReviewService.ts
 client/src/pages/review/index.vue
 client/src/pages/review-session/index.vue
+client/src/components/shared/navigation/AppTabBar.vue
+client/src/components/shared/navigation/KnowledgeEntryFab.vue
 client/src/composables/useReviewList.ts
 client/src/composables/useReviewSession.ts
 client/src/composables/useReviewNotifications.ts

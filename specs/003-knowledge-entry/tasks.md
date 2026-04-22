@@ -42,7 +42,7 @@
 - [ ] T010 [P] 定义当前特性依赖的用户模型 server/src/models/User.ts
 - [ ] T011 [P] 创建带 Token 注入与 401 处理的统一请求层 client/src/utils/request.ts
 - [ ] T012 [P] 创建知识点录入领域类型与基础状态容器 client/src/types/topic.ts、client/src/stores/knowledgeEntry.ts
-- [ ] T013 [P] 创建知识点录入 composable 骨架与页面路由占位 client/src/composables/useTopicEntry.ts、client/src/pages/topic-entry/index.vue、client/pages.json
+- [ ] T013 [P] 创建知识点录入 composable 骨架与唯一页面路由占位 client/src/composables/useTopicEntry.ts、client/src/pages/topic-entry/index.vue、client/pages.json
 - [ ] T014 创建 topics 路由与服务骨架 server/src/routes/topics.ts、server/src/services/topicService.ts、server/src/services/answerService.ts、server/src/services/reviewPlanService.ts
 
 **Checkpoint**: 录入页与 `/api/topics` 的共享骨架完成，用户故事可按优先级推进。
@@ -62,7 +62,7 @@
 - [ ] T017 [P] [US1] 按 client/UI/create-topic.png 像素级还原标题输入卡片到 client/src/components/topic-entry/TopicTitleForm.vue，覆盖标题标签、文本域、placeholder、辅助文案与字数计数器
 - [ ] T018 [P] [US1] 按 client/UI/create-topic.png 像素级还原 AI 说明卡片与底部固定提交栏到 client/src/components/topic-entry/TopicEntryNoticeCard.vue、client/src/components/topic-entry/TopicEntryFooterBar.vue，覆盖默认、禁用与按下状态
 - [ ] T019 [US1] 在 client/src/composables/useTopicEntry.ts、client/src/stores/knowledgeEntry.ts 中实现 1-30 字纯文字校验、字数统计、按钮可用态和离页未保存确认逻辑
-- [ ] T020 [US1] 在 client/src/pages/topic-entry/index.vue 中组装导航、输入卡片、AI 提示卡和底部 CTA，并通过 client/pages.json 注册知识点录入页面入口
+- [ ] T020 [US1] 在 client/src/pages/topic-entry/index.vue 中组装导航、输入卡片、AI 提示卡和底部 CTA，并通过 client/pages.json 将 `topic-entry` 注册为知识点录入页面唯一入口
 
 **Checkpoint**: 录入页面可独立展示与交互，且主视觉和输入状态达到设计稿一致性。
 
@@ -216,6 +216,7 @@ T032 client/src/components/topic-entry/TopicTitleForm.vue + client/src/component
 ## Notes
 
 - 所有录入页视觉实现以 client/UI/create-topic.png 为唯一设计基准
+- `create-topic` 仅作为设计稿资源名存在；源码目录、页面路由和跨模块跳转目标统一使用 `topic-entry`
 - 所有前端样式必须遵守 constitution 中关于 UnoCSS token、wot-design-uni 复用和禁止硬编码色值/阴影的约束
 - 当前未加入自动化测试任务；验收以 quickstart.md 手工场景、API 合同和设计稿对照为主
 - 对共享文件 client/src/pages/topic-entry/index.vue、client/src/composables/useTopicEntry.ts、server/src/services/topicService.ts 的改动需按阶段合并，避免跨故事互相覆盖

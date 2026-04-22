@@ -5,7 +5,7 @@
 
 ## Summary
 
-在遵循宪章锁定技术栈的前提下，实现复习列表与费曼复习页面构成的完整复习闭环：服务端以 `ReviewNode` 作为复习任务调度真源，负责过期分级、AI 判定、渐进式计划调整和任务状态更新；客户端在 unibest 工程中实现复习列表页与费曼输出页，并根据任务提醒策略调度本地通知。由于当前仓库仍缺失 001 的认证底座、003 的真实数据模型实现以及 `client/` 下的可运行前端工程，实施顺序需先补齐基础设施，再落 004 的提醒、执行、判定与计划调整链路。
+在遵循宪章锁定技术栈的前提下，实现复习列表与费曼复习页面构成的完整复习闭环：服务端以 `ReviewNode` 作为复习任务调度真源，负责过期分级、AI 判定、渐进式计划调整和任务状态更新；客户端在 unibest 工程中实现复习列表页与费曼输出页，并根据任务提醒策略调度本地通知，同时在复习列表页复用共享底部导航与知识点录入悬浮按钮。由于当前仓库仍缺失 001 的认证底座、003 的真实数据模型实现以及 `client/` 下的可运行前端工程，实施顺序需先补齐基础设施，再落 004 的提醒、执行、判定与计划调整链路。
 
 ## Technical Context
 
@@ -99,16 +99,20 @@ client/
     │   └── review-session/
     │       └── index.vue
     ├── components/
-    │   └── review/
-    │       ├── ReviewTabs.vue
-    │       ├── ReviewTaskCard.vue
-    │       ├── ReviewRiskBanner.vue
-    │       ├── ReviewEmptyState.vue
-    │       ├── FeynmanHeader.vue
-    │       ├── FeynmanTaskBanner.vue
-    │       ├── FeynmanPromptCard.vue
-    │       ├── FeynmanComposer.vue
-    │       └── ReviewResultSheet.vue
+    │   ├── review/
+    │   │   ├── ReviewTabs.vue
+    │   │   ├── ReviewTaskCard.vue
+    │   │   ├── ReviewRiskBanner.vue
+    │   │   ├── ReviewEmptyState.vue
+    │   │   ├── FeynmanHeader.vue
+    │   │   ├── FeynmanTaskBanner.vue
+    │   │   ├── FeynmanPromptCard.vue
+    │   │   ├── FeynmanComposer.vue
+    │   │   └── ReviewResultSheet.vue
+    │   └── shared/
+    │       └── navigation/
+    │           ├── AppTabBar.vue
+    │           └── KnowledgeEntryFab.vue
     ├── composables/
     │   ├── useReviewList.ts
     │   ├── useReviewSession.ts
@@ -123,7 +127,7 @@ client/
         └── review.ts
 ```
 
-**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `server/src/` 内补齐宪章要求的配置、模型、路由、服务、中间件与工具分层；在 `client/` 根目录初始化真实 unibest 工程并保留 `client/UI/` 作为设计稿资源目录。复习链路以 `review` 路由为入口，分别下沉至列表聚合、执行提交、AI 判定、计划调整与提醒策略服务；前端则以 `pages/ + components/ + composables/ + stores/` 分层承载 review-list.png 与 feynman-output.png 两个核心页面，以及本地提醒调度。
+**Structure Decision**: 保持仓库现有 `server/` 单独后端结构不变，在 `server/src/` 内补齐宪章要求的配置、模型、路由、服务、中间件与工具分层；在 `client/` 根目录初始化真实 unibest 工程并保留 `client/UI/` 作为设计稿资源目录。复习链路以 `review` 路由为入口，分别下沉至列表聚合、执行提交、AI 判定、计划调整与提醒策略服务；前端则以 `pages/ + components/review + components/shared/navigation + composables + stores` 分层承载 review-list.png 与 feynman-output.png 两个核心页面，以及本地提醒调度。知识点录入目标页统一使用 `topic-entry`，复习列表不再维护 review 专属的底部导航/FAB 副本。
 
 ## Complexity Tracking
 

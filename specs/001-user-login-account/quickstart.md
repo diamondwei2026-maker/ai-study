@@ -4,6 +4,13 @@
 
 本模块实现 APP 的用户注册、登录、登录状态管理、个人中心和数据隔离功能。
 
+## 跨模块导航约定
+
+- 个人中心、首页、复习列表统一复用 `client/src/components/shared/navigation/AppTabBar.vue`
+- 页面右下角的知识点录入入口统一复用 `client/src/components/shared/navigation/KnowledgeEntryFab.vue`
+- 知识点录入页源码目录与页面路由统一命名为 `topic-entry`；`create-topic` 仅保留为设计稿资源名
+- 若 002、003、004 尚未全部落地，可先用占位页验证导航 wiring 与激活态
+
 ## 技术栈
 
 - **前端**: unibest (uni-app) + Vue 3 Composition API + TypeScript + Pinia + wot-design-uni
@@ -64,6 +71,7 @@ server/src/
 client/src/
 ├── pages/login/     # 登录/注册页面
 ├── pages/mine/      # 个人中心页面
+├── components/shared/navigation/  # 全局底部导航与知识点录入悬浮按钮
 ├── stores/          # Pinia 状态管理（useUserStore）
 ├── composables/     # 组合式函数（useAuth, useProfile）
 └── utils/           # 请求封装（自动附加 Token, 自动刷新）

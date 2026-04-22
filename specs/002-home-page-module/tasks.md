@@ -80,8 +80,8 @@
 - [ ] T022 [US2] 创建首页关键操作事件模型 server/src/models/HomeActionEvent.ts
 - [ ] T023 [US2] 在 server/src/services/homeService.ts、server/src/routes/home.ts 中实现 POST /api/home/action-events 写入链路
 - [ ] T024 [P] [US2] 按 client/UI/home.png 像素级还原首页紫色主操作卡片于 client/src/components/home/HomePrimaryActionCard.vue，覆盖默认、按下、禁用与空任务状态
-- [ ] T025 [P] [US2] 按 client/UI/home.png 像素级还原悬浮新建按钮与底部 TabBar 于 client/src/components/home/HomeFabButton.vue、client/src/components/home/HomeTabBar.vue，覆盖尺寸、阴影、圆角、激活态与未激活态
-- [ ] T026 [P] [US2] 创建首页快捷入口目标页 client/src/pages/review/index.vue、client/src/pages/create-topic/index.vue
+- [ ] T025 [P] [US2] 在 client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/pages/home/index.vue 中实现首页态的悬浮新建按钮与底部 TabBar 接入，覆盖尺寸、阴影、圆角、activeTab=home、未激活态和跳转 `topic-entry`
+- [ ] T026 [P] [US2] 创建首页快捷入口目标页 client/src/pages/review/index.vue，并将“新建知识点”入口统一指向 client/src/pages/topic-entry/index.vue
 - [ ] T027 [US2] 在 client/src/composables/useNavigation.ts、client/src/pages/home/index.vue 中接入关键操作跳转与点击事件上报
 - [ ] T028 [US2] 在 client/src/composables/useHome.ts、client/src/components/home/HomePrimaryActionCard.vue 中实现无待复习任务反馈与目标路由可用性保护
 
@@ -101,7 +101,7 @@
 - [ ] T030 [P] [US3] 按 client/UI/home.png 像素级还原橙色关注提示条并扩展不同建议样式到 client/src/components/home/HomeGuidanceBanner.vue
 - [ ] T031 [P] [US3] 在 client/src/stores/home.ts、client/src/types/home.ts 中扩展建议优先级、跨模块返回刷新标记与最近动作上下文
 - [ ] T032 [US3] 在 client/src/pages/home/index.vue、client/src/composables/useHome.ts 中接入建议条排序、推荐动作高亮与页面显示时刷新
-- [ ] T033 [US3] 在 client/src/pages/review/index.vue、client/src/pages/create-topic/index.vue、client/src/composables/useHome.ts 中实现跨模块返回后的首页状态一致性刷新
+- [ ] T033 [US3] 在 client/src/pages/review/index.vue、client/src/pages/topic-entry/index.vue、client/src/composables/useHome.ts 中实现跨模块返回后的首页状态一致性刷新
 
 **Checkpoint**: 首页引导建议与跨模块衔接可独立验证，橙色提醒区与推荐动作行为成立
 
@@ -111,7 +111,7 @@
 
 **Purpose**: 完成视觉 token 收口、日志补强与手工验收闭环
 
-- [ ] T034 [P] 在 client/uno.config.ts、client/src/components/home/HomeHeroHeader.vue、client/src/components/home/HomeStatusCard.vue、client/src/components/home/HomeGuidanceBanner.vue、client/src/components/home/HomePrimaryActionCard.vue、client/src/components/home/HomeFabButton.vue、client/src/components/home/HomeTabBar.vue 中收口首页视觉 token 并移除硬编码样式值
+- [ ] T034 [P] 在 client/uno.config.ts、client/src/components/home/HomeHeroHeader.vue、client/src/components/home/HomeStatusCard.vue、client/src/components/home/HomeGuidanceBanner.vue、client/src/components/home/HomePrimaryActionCard.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、client/src/components/shared/navigation/AppTabBar.vue 中收口首页视觉 token 并移除硬编码样式值
 - [ ] T035 [P] 在 server/src/services/homeService.ts、server/src/utils/logger.ts 中补齐 dashboard 读取失败与 action-event 写入失败的结构化日志
 - [ ] T036 [P] 更新首页模块交付说明与手工验收步骤到 specs/002-home-page-module/quickstart.md、specs/002-home-page-module/plan.md
 - [ ] T037 在 client/src/pages/home/index.vue、server/src/routes/home.ts 上跑通 quickstart 手工验收场景并修复遗留缺口
@@ -174,8 +174,8 @@ T020 client/src/composables/useHome.ts + client/src/stores/home.ts
 
 ```text
 T024 client/src/components/home/HomePrimaryActionCard.vue
-T025 client/src/components/home/HomeFabButton.vue + client/src/components/home/HomeTabBar.vue
-T026 client/src/pages/review/index.vue + client/src/pages/create-topic/index.vue
+T025 client/src/components/shared/navigation/KnowledgeEntryFab.vue + client/src/components/shared/navigation/AppTabBar.vue + client/src/pages/home/index.vue
+T026 client/src/pages/review/index.vue + client/src/pages/topic-entry/index.vue
 ```
 
 ---
@@ -210,4 +210,5 @@ T026 client/src/pages/review/index.vue + client/src/pages/create-topic/index.vue
 - 所有首页视觉实现以 client/UI/home.png 为唯一设计基准
 - 所有前端样式必须遵守 constitution 中关于 UnoCSS token、wot-design-uni 复用和禁止硬编码色值/阴影的约束
 - 当前未加入自动化测试任务；验收以 quickstart.md 手工场景和设计稿对照为主
-- 对共享文件 client/src/pages/home/index.vue、server/src/services/homeService.ts 的改动需按阶段合并，避免跨故事互相覆盖
+- 底部导航与悬浮知识点录入按钮必须复用 client/src/components/shared/navigation/，不得新增 home 专属副本
+- 对共享文件 client/src/pages/home/index.vue、client/src/components/shared/navigation/AppTabBar.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue、server/src/services/homeService.ts 的改动需按阶段合并，避免跨故事互相覆盖

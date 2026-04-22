@@ -129,7 +129,7 @@
 
 **Goal**: 用户查看和修改个人资料（昵称、头像、手机号）
 
-**Independent Test**: 已登录用户进入个人中心修改昵称和头像，修改结果持久化并同步显示
+**Independent Test**: 已登录用户进入个人中心修改昵称和头像，修改结果持久化并同步显示，同时验证底部导航激活态、首页/复习跳转和右下角知识点录入按钮入口
 
 ### 后端实现
 
@@ -138,18 +138,20 @@
 
 ### 前端实现（像素级还原 mine.png）
 
-- [ ] T035 [US4] 创建个人中心页面 client/src/pages/mine/index.vue，实现以下设计稿像素级还原：
+- [ ] T035 [US4] 创建个人中心页面 client/src/pages/mine/index.vue，并抽取全局底部导航与知识点录入悬浮按钮到 client/src/components/shared/navigation/AppTabBar.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue，实现以下设计稿像素级还原：
   - 状态栏背景色与页面顶部渐变一致（`#3B7BF8` → `#6B4EFF`，高度覆盖状态栏 + 200rpx）
   - 用户信息区：头像圆形（直径 128rpx，白色 4rpx 边框，默认头像 icon），昵称（字号 36rpx，字重 600，颜色白色），手机号脱敏展示（字号 26rpx，颜色 `rgba(255,255,255,0.8)`）
   - 功能列表白色卡片（圆角 24rpx，水平边距 24rpx，距顶部信息区 -40rpx 上浮，阴影 `0 4rpx 24rpx rgba(0,0,0,0.10)`）
   - 每个 cell（高度 112rpx，左侧彩色圆形 icon 背景直径 72rpx，icon 字号 40rpx，标题字号 32rpx 颜色 `#1A1A1A`，右侧副文本 `#999999` + 箭头图标 `#CCCCCC`，底部分割线除最后一项）
   - 功能项列表：「编辑昵称」「更换头像」「修改密码」「换绑手机号」
+  - 页面底部接入共享底部导航栏，当前激活项为「我的」，并适配安全区留白
+  - 页面右下角接入共享知识点录入悬浮按钮，按钮悬浮于底部导航上方，点击跳转统一的 `topic-entry` 页面
   - 底部「退出登录」按钮（高度 96rpx，圆角 48rpx，背景 `#FFF5F5`，字色 `#FF4D4F`，字号 32rpx，字重 500，水平边距 32rpx，距列表 48rpx）
   - 页面底部安全区域适配 `padding-bottom: env(safe-area-inset-bottom)`
 - [ ] T036 [US4] 实现个人中心数据逻辑 composable client/src/composables/useProfile.ts（fetchProfile：获取并填充用户信息；updateNickname：调用 PUT /api/user/profile → 更新 store；uploadAvatar：uni.chooseImage → 上传 multipart/form-data → 更新 store；同步更新 Pinia store）
-- [ ] T037 [US4] 在 client/src/pages/mine/index.vue 中引入 useProfile，绑定数据并接入头像点击上传、昵称点击弹窗编辑交互
+- [ ] T037 [US4] 在 client/src/pages/mine/index.vue 中引入 useProfile，绑定数据并接入头像点击上传、昵称点击弹窗编辑、底部导航切换和右下角知识点录入按钮跳转交互
 
-**Checkpoint**: 个人中心 UI 与设计稿像素级一致，资料修改后全局同步
+**Checkpoint**: 个人中心 UI 与设计稿像素级一致，资料修改后全局同步，且共享底部导航/知识点录入入口契约建立完成
 
 ---
 
@@ -260,7 +262,7 @@ Phase 10 (Polish) ← 所有故事完成后
 - 完成后即可演示：新用户注册 → 登录页像素级 UI → 验证码注册流程
 
 **Increment 2**: + Phase 4 + 5（登录 + 状态保持）
-**Increment 3**: + Phase 6 + 7（个人中心像素级 UI + 密码管理）
+**Increment 3**: + Phase 6 + 7（个人中心像素级 UI + 共享导航契约 + 密码管理）
 **Full Delivery**: Phase 1~10 全部完成
 
 ---
@@ -292,3 +294,5 @@ Phase 10 (Polish) ← 所有故事完成后
 | Cell 高度      | 112rpx                                                                                 |
 | Cell icon 背景 | 圆形直径 72rpx，各功能项使用对应主题色                                                 |
 | 退出按钮       | 高 96rpx，圆角 48rpx，背景 `#FFF5F5`，字色 `#FF4D4F`                                   |
+| 底部导航       | 复用 `AppTabBar.vue`，含首页/复习/我的三个页签，当前页激活态为「我的」                 |
+| 悬浮录入按钮   | 复用 `KnowledgeEntryFab.vue`，固定在右下角并跳转统一的 `topic-entry` 页面              |

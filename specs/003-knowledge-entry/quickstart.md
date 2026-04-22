@@ -7,6 +7,7 @@
 ## 前置条件
 
 - 001 用户登录与账号管理基础设施已按设计落地，至少包含 JWT 鉴权、中间件、统一响应封装和 MongoDB 连接
+- 首页、复习列表和个人中心已接入共享知识点录入按钮，或已提供指向 `client/src/pages/topic-entry/index.vue` 的同名占位路由
 - 本地可用的 MongoDB 实例，且支持 Mongoose session 事务（推荐单节点副本集）
 - Node.js 与 npm 环境可用
 - OpenRouter 可用的模型与 API Key
@@ -44,7 +45,7 @@ PORT=3000
 1. 在 `client/` 根目录初始化 unibest + Vue 3 + TypeScript 工程
 2. 接入 Pinia、wot-design-uni、UnoCSS、UnoCSS Icons
 3. 配置统一 `request` 封装，禁止在页面中直接调用底层请求 API
-4. 新增 `client/src/pages/topic-entry/index.vue` 和 `client/src/composables/useTopicEntry.ts`
+4. 新增 `client/src/pages/topic-entry/index.vue` 和 `client/src/composables/useTopicEntry.ts`，并将 `topic-entry` 注册为共享知识点录入按钮的唯一目标页
 
 ### 4. 建议实施顺序
 
@@ -52,13 +53,13 @@ PORT=3000
 2. 实现 `POST /api/topics` 的请求校验、共享答案命中/生成和语义去重
 3. 接入事务性写入，确保 `KnowledgePoint + ReviewNode x 6` 同步成功或同步失败
 4. 实现录入页表单、提交态和成功/失败反馈
-5. 将创建结果与首页/后续复习流程衔接
+5. 将创建结果与首页/后续复习流程衔接，并校验首页、复习列表、个人中心的共享录入入口均指向 `topic-entry`
 
 ## 手工验收场景
 
 ### 场景 A：共享知识库已命中
 
-1. 使用已登录用户进入知识点录入页
+1. 使用已登录用户，从首页、复习列表或个人中心的共享知识点录入按钮进入知识点录入页
 2. 输入一个共享知识库已存在的合法纯文字标题
 3. 点击“保存并生成计划”，验证成功返回知识点、标准答案和 6 个初始复习节点
 4. 验证最近一次待复习时间等于第 1 个节点时间
