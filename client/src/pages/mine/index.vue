@@ -41,8 +41,8 @@ function goChangePhone() {
   uni.navigateTo({ url: "/pages/mine/change-phone" });
 }
 
-function goReviewPlaceholder() {
-  uni.reLaunch({ url: "/pages/review-placeholder/index" });
+function goReviewPage() {
+  uni.reLaunch({ url: "/pages/review/index" });
 }
 
 async function confirmLogout() {
@@ -136,7 +136,7 @@ onPullDownRefresh(() => {
       <view class="mt-[24rpx] card-surface overflow-hidden">
         <view
           class="flex items-center justify-between px-[28rpx] py-[30rpx]"
-          @click="goReviewPlaceholder"
+          @click="goReviewPage"
         >
           <view class="flex items-center gap-[18rpx]">
             <view

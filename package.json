@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "npm --prefix client run lint && npm --prefix server run lint",
+    "typecheck": "npm --prefix client run typecheck && npm --prefix server run typecheck",
+    "build": "npm --prefix client run build && npm --prefix server run build",
+    "test": "npm --prefix server run test"
   },
   "repository": {
     "type": "git",

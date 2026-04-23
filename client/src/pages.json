@@ -34,6 +34,19 @@
       }
     },
     {
+      "path": "pages/home/index",
+      "style": {
+        "navigationStyle": "custom",
+        "enablePullDownRefresh": true
+      }
+    },
+    {
+      "path": "pages/review/index",
+      "style": {
+        "navigationStyle": "custom"
+      }
+    },
+    {
       "path": "pages/home-placeholder/index",
       "style": {
         "navigationStyle": "custom"

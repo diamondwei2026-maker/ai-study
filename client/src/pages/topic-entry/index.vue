@@ -1,3 +1,16 @@
+<script setup lang="ts">
+import { onHide } from "@dcloudio/uni-app";
+
+import { pinia } from "@/stores";
+import { useHomeStore } from "@/stores/home";
+
+const homeStore = useHomeStore(pinia);
+
+onHide(() => {
+  homeStore.markRefreshNeeded();
+});
+</script>
+
 <template>
   <view class="min-h-screen bg-page-bg px-[24rpx] pb-[48rpx] pt-safe">
     <view
@@ -12,8 +25,8 @@
     <view
       class="mt-[24rpx] card-surface p-[28rpx] text-[28rpx] leading-[1.8] text-text-secondary"
     >
-      当前占位页用于验证 001 与后续模块之间的共享导航约定：FAB 固定跳转至
-      topic-entry 路由，不再散落多个入口实现。
+      当前占位页用于验证首页与后续模块之间的共享导航约定：FAB 固定跳转至
+      topic-entry 路由，返回首页后会自动刷新状态。
     </view>
   </view>
 </template>

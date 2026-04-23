@@ -112,8 +112,15 @@ client/
 ## Validation Strategy
 
 - **Contract Validation**: 逐项对照 `specs/002-home-page-module/contracts/api.md` 校验 `GET /api/home/dashboard` 与 `POST /api/home/action-events` 的字段、错误码和兜底约束。
+- **Automated Contract Check**: 运行 `npm --prefix server run test -- tests/integration/home.dashboard.test.ts`，覆盖 dashboard 的逾期态、空态与 `action-events` 成功写入链路。首次执行会下载 MongoDB Memory Server 二进制，耗时会明显高于后续增量运行。
 - **Performance Validation**: 本地或测试环境对 dashboard 接口连续采样 10 次并记录 p95，目标小于 500ms；首页从页面显示到关键操作区可点击的耗时目标小于 2 秒。
 - **Success Criteria Measurement**: SC-001 与 SC-002 通过 quickstart 中的手工定时验收记录；SC-003 作为上线后指标，基于 `HomeActionEvent` 埋点按周复盘；SC-005 需在上线前记录“找不到下一步操作”反馈基线，并在上线后按周汇总同口径反馈进行对比。
+
+## Delivery Notes
+
+- 当前实现已补齐首页真实路由 `client/src/pages/home/index.vue`、复习目标页 `client/src/pages/review/index.vue`、共享底部导航与知识点录入 FAB 接线，以及首页聚合接口 `/api/home/dashboard` 与行为记录接口 `/api/home/action-events`。
+- 前端首页具备 `loading`、`EMPTY`、`OVERDUE`、`UNAVAILABLE` 与最近一次成功快照兜底；跨模块返回后通过 `refreshOnNextShow` 刷新标记重新拉取首页状态。
+- 服务端已引入结构化日志工具，并在 dashboard 聚合失败、action-event 写入失败时记录结构化错误日志。
 
 ## Complexity Tracking
 

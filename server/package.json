@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/index.ts",
+    "lint": "npm run typecheck",
     "build": "tsc",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
     "load:test": "node tests/performance/auth-profile.load.js"
@@ -17,6 +19,7 @@
   "dependencies": {
     "@langchain/core": "^1.1.38",
     "@langchain/openrouter": "^0.1.10",
+    "ai-study": "file:..",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.4.0",
@@ -24,7 +27,8 @@
     "express-validator": "^7.3.2",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.5.0",
-    "multer": "^2.1.1"
+    "multer": "^2.1.1",
+    "pino": "^9.7.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",

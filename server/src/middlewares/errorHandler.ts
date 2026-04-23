@@ -1,6 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 
 import { AppError, sendFail } from "../utils/response.js";
+import { logger } from "../utils/logger.js";
 
 export const errorHandler: ErrorRequestHandler = (
   error,
@@ -17,7 +18,7 @@ export const errorHandler: ErrorRequestHandler = (
     return;
   }
 
-  console.error(error);
+  logger.error({ err: error }, "unexpected server error");
   sendFail(response, "服务器内部错误", 500);
 };
 

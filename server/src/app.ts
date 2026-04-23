@@ -4,6 +4,7 @@ import path from "node:path";
 
 import errorHandler from "./middlewares/errorHandler.js";
 import authRoutes from "./routes/auth.js";
+import homeRoutes from "./routes/home.js";
 import userRoutes from "./routes/user.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -23,6 +24,7 @@ export function createApp() {
   });
 
   app.use("/api/auth", authRoutes);
+  app.use("/api/home", homeRoutes);
   app.use("/api/user", userRoutes);
   app.use(errorHandler);
 

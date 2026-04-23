@@ -5,6 +5,7 @@
   "private": true,
   "scripts": {
     "dev": "unh dev",
+    "lint": "npm run typecheck",
     "build": "unh build",
     "typecheck": "tsc --noEmit",
     "about": "unh info"

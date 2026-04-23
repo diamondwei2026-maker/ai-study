@@ -7,6 +7,7 @@ import { ChatOpenRouter } from "@langchain/openrouter";
 import { HumanMessage } from "@langchain/core/messages";
 
 import { avatarUploadDir, createApp } from "./app.js";
+import { logger } from "./utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,9 +33,9 @@ async function probeOpenRouter() {
 
   try {
     const test = await llm.invoke([new HumanMessage("hi")]);
-    console.log("✅ OpenRouter 大模型接入成功：", test.content);
+    logger.info({ content: test.content }, "openrouter probe succeeded");
   } catch (error) {
-    console.error("❌ OpenRouter 接入失败：", (error as Error).message);
+    logger.error({ err: error }, "openrouter probe failed");
   }
 }
 
@@ -45,15 +46,15 @@ async function bootstrap() {
 
   await fs.mkdir(avatarUploadDir, { recursive: true });
   await mongoose.connect(process.env.MONGODB_URI);
-  console.log("✅ MongoDB 连接成功");
+  logger.info("mongodb connected");
 
   app.listen(PORT, async () => {
-    console.log(`\n✅ 服务启动成功：http://localhost:${PORT}`);
+    logger.info({ port: PORT }, "server started");
     await probeOpenRouter();
   });
 }
 
 bootstrap().catch((error) => {
-  console.error("❌ 服务启动失败：", (error as Error).message);
+  logger.error({ err: error }, "server bootstrap failed");
   process.exit(1);
 });

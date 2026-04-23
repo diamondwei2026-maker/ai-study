@@ -7,13 +7,13 @@ const tabs = [
   {
     key: "home",
     label: "首页",
-    route: "/pages/home-placeholder/index",
+    route: "/pages/home/index",
     icon: "⌂",
   },
   {
     key: "review",
     label: "复习",
-    route: "/pages/review-placeholder/index",
+    route: "/pages/review/index",
     icon: "▤",
   },
   { key: "mine", label: "我的", route: "/pages/mine/index", icon: "◉" },
@@ -30,29 +30,33 @@ function navigate(route: string, key: string) {
 
 <template>
   <view
-    class="fixed bottom-0 left-0 right-0 z-40 border-t border-border-subtle bg-surface-card/96 px-[36rpx] pb-safe pt-[14rpx] backdrop-blur-[18rpx]"
+    class="fixed bottom-0 left-0 right-0 z-40 border-t border-border-subtle bg-surface-card/96 px-[34rpx] pb-safe pt-[14rpx] backdrop-blur-[18rpx]"
   >
     <view class="flex items-center justify-between">
       <view
         v-for="tab in tabs"
         :key="tab.key"
-        class="flex min-w-[140rpx] flex-col items-center gap-[10rpx] py-[10rpx]"
+        class="flex min-w-[140rpx] flex-col items-center gap-[8rpx] py-[10rpx]"
         @click="navigate(tab.route, tab.key)"
       >
         <text
           :class="
-            tab.key === active ? 'text-brand-primary' : 'text-text-secondary'
+            tab.key === active ? 'text-brand-primary' : 'text-text-tertiary'
           "
           class="text-[34rpx] leading-none"
           >{{ tab.icon }}</text
         >
         <text
           :class="
-            tab.key === active ? 'text-brand-primary' : 'text-text-secondary'
+            tab.key === active ? 'text-brand-primary' : 'text-text-tertiary'
           "
           class="text-[22rpx] font-[600]"
           >{{ tab.label }}</text
         >
+        <view
+          class="h-[6rpx] w-[34rpx] rounded-full bg-brand-primary transition-opacity duration-200"
+          :class="tab.key === active ? 'opacity-100' : 'opacity-0'"
+        ></view>
       </view>
     </view>
   </view>

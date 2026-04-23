@@ -22,6 +22,12 @@ npm install mongoose express-validator jsonwebtoken bcryptjs
 npm run dev
 ```
 
+自动化契约校验：
+
+```bash
+npm --prefix server run test -- tests/integration/home.dashboard.test.ts
+```
+
 推荐环境变量：
 
 ```env
@@ -36,6 +42,7 @@ PORT=3000
 - 安装并启用 Pinia、wot-design-uni、UnoCSS、UnoCSS Icons
 - 保留 `client/UI/` 设计稿目录，不将源码写入其中
 - 配置统一请求封装，禁止直接在页面内调用底层请求 API
+- 当前首页真实入口为 `client/src/pages/home/index.vue`，复习目标页为 `client/src/pages/review/index.vue`
 
 ### 3. 实施顺序
 
@@ -49,6 +56,14 @@ PORT=3000
 
 ### 契约核对
 
+自动化验证：
+
+1. 运行 `npm --prefix server run test -- tests/integration/home.dashboard.test.ts`
+2. 验证测试覆盖 `OVERDUE`、`EMPTY` 与 `action-events` 成功写入三条关键路径
+3. 首次运行若耗时较长，优先确认 MongoDB Memory Server 二进制下载是否完成
+
+手工核对：
+
 1. 启动后端后使用已登录 Token 请求 `GET /api/home/dashboard`
 2. 对照 `specs/002-home-page-module/contracts/api.md` 核验 `generatedAt`、`reviewStatus`、`primaryActions`、`guidance` 字段是否完整
 3. 在无待复习任务场景下再次请求，确认 `startReview.enabled=false` 且返回 `disabledReason`
@@ -59,6 +74,7 @@ PORT=3000
 1. 对 `GET /api/home/dashboard` 连续采样 10 次，记录每次耗时并计算 p95，目标小于 500ms
 2. 进入首页后开始计时，记录到“开始复习”或“新建知识点”按钮可点击的耗时，目标小于 2 秒
 3. 将采样结果记录在本次交付说明中；若未达标，优先排查聚合查询与首页初始化链路
+4. 当前仓库尚未执行真实接口采样，需在本地 MongoDB 与前端联调环境中补跑后再回填结果
 
 ## 手工验收场景
 
@@ -95,6 +111,7 @@ PORT=3000
 server/src/routes/home.ts
 server/src/services/homeService.ts
 server/src/models/HomeActionEvent.ts
+server/tests/integration/home.dashboard.test.ts
 client/src/pages/home/index.vue
 client/src/components/shared/navigation/AppTabBar.vue
 client/src/components/shared/navigation/KnowledgeEntryFab.vue

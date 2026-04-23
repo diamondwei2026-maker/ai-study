@@ -1,5 +1,6 @@
 import bcrypt from "bcryptjs";
 
+import ReviewTaskModel from "../../src/models/ReviewTask.js";
 import RefreshTokenModel from "../../src/models/RefreshToken.js";
 import SecurityLogModel from "../../src/models/SecurityLog.js";
 import UserModel from "../../src/models/User.js";
@@ -46,6 +47,24 @@ export async function createVerificationCodeFixture(options?: {
     type: options?.type ?? "login",
     used: options?.used ?? false,
     expiresAt: options?.expiresAt ?? new Date(Date.now() + 5 * 60 * 1000),
+  });
+}
+
+export async function createReviewTaskFixture(options: {
+  userId: string;
+  title?: string;
+  dueAt?: Date;
+  status?: "pending" | "completed";
+  completedAt?: Date | null;
+  overdueCount?: number;
+}) {
+  return ReviewTaskModel.create({
+    userId: options.userId,
+    title: options.title ?? "费曼复习任务",
+    dueAt: options.dueAt ?? new Date(Date.now() + 60 * 60 * 1000),
+    status: options.status ?? "pending",
+    completedAt: options.completedAt ?? null,
+    overdueCount: options.overdueCount ?? 0,
   });
 }
 
