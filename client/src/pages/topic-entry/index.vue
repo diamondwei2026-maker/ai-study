@@ -1,32 +1,148 @@
 <script setup lang="ts">
-import { onHide } from "@dcloudio/uni-app";
+import { onBackPress, onUnload } from "@dcloudio/uni-app";
+import { ref } from "vue";
 
-import { pinia } from "@/stores";
-import { useHomeStore } from "@/stores/home";
+import CreationResultCard from "@/components/topic-entry/CreationResultCard.vue";
+import TopicEntryFooterBar from "@/components/topic-entry/TopicEntryFooterBar.vue";
+import TopicEntryNavBar from "@/components/topic-entry/TopicEntryNavBar.vue";
+import TopicEntryNoticeCard from "@/components/topic-entry/TopicEntryNoticeCard.vue";
+import TopicTitleForm from "@/components/topic-entry/TopicTitleForm.vue";
+import { useTopicEntry } from "@/composables/useTopicEntry";
 
-const homeStore = useHomeStore(pinia);
+const {
+  title,
+  submitting,
+  characterCount,
+  validationMessage,
+  creationResult,
+  conflictResult,
+  failureMessage,
+  feedbackStatus,
+  canSubmit,
+  hasUnsavedChanges,
+  submitLabel,
+  updateTitle,
+  submit,
+  reset,
+} = useTopicEntry();
 
-onHide(() => {
-  homeStore.markRefreshNeeded();
+const allowNativeBack = ref(false);
+
+function showMessage(message: string) {
+  uni.showToast({
+    title: message,
+    icon: "none",
+    duration: 2200,
+  });
+}
+
+function leavePage() {
+  const pages = getCurrentPages();
+  if (pages.length > 1) {
+    allowNativeBack.value = true;
+    uni.navigateBack();
+    return;
+  }
+
+  reset();
+  uni.reLaunch({ url: "/pages/home/index" });
+}
+
+function confirmDiscardChanges() {
+  return new Promise<boolean>((resolve) => {
+    uni.showModal({
+      title: "放弃本次录入？",
+      content: "当前输入不会自动保存，返回后需要重新填写。",
+      confirmText: "放弃",
+      cancelText: "继续编辑",
+      success: (result) => {
+        resolve(Boolean(result.confirm));
+      },
+      fail: () => {
+        resolve(false);
+      },
+    });
+  });
+}
+
+async function handleBack() {
+  if (submitting.value) {
+    showMessage("正在生成中，请稍候");
+    return;
+  }
+
+  if (!hasUnsavedChanges.value) {
+    leavePage();
+    return;
+  }
+
+  const confirmed = await confirmDiscardChanges();
+  if (!confirmed) {
+    return;
+  }
+
+  reset();
+  leavePage();
+}
+
+async function handleSubmit() {
+  const succeeded = await submit();
+
+  if (succeeded) {
+    uni.pageScrollTo({
+      scrollTop: 560,
+      duration: 240,
+    });
+  }
+}
+
+onBackPress(() => {
+  if (allowNativeBack.value) {
+    allowNativeBack.value = false;
+    return false;
+  }
+
+  void handleBack();
+  return true;
+});
+
+onUnload(() => {
+  reset();
 });
 </script>
 
 <template>
-  <view class="min-h-screen bg-page-bg px-[24rpx] pb-[48rpx] pt-safe">
-    <view
-      class="rounded-[32rpx] bg-brand-gradient px-[28rpx] pb-[38rpx] pt-[28rpx] text-on-brand"
-    >
-      <text class="text-[40rpx] font-[700]">知识点录入</text>
-      <text class="mt-[12rpx] block text-[24rpx] text-on-brand-muted"
-        >共享 FAB 已接入，后续 003 模块会在这里落真实录入流。</text
-      >
+  <view class="min-h-screen bg-page-bg pb-[220rpx]">
+    <TopicEntryNavBar :submitting="submitting" @back="handleBack" />
+
+    <view class="px-[24rpx] pb-[48rpx]">
+      <TopicTitleForm
+        :model-value="title"
+        :character-count="characterCount"
+        :error-message="validationMessage"
+        :submitting="submitting"
+        @update:model-value="updateTitle"
+      />
+
+      <view class="mt-[24rpx]">
+        <TopicEntryNoticeCard />
+      </view>
+
+      <view v-if="feedbackStatus" class="mt-[24rpx]">
+        <CreationResultCard
+          :status="feedbackStatus"
+          :result="creationResult"
+          :conflict="conflictResult"
+          :failure-message="failureMessage"
+        />
+      </view>
     </view>
 
-    <view
-      class="mt-[24rpx] card-surface p-[28rpx] text-[28rpx] leading-[1.8] text-text-secondary"
-    >
-      当前占位页用于验证首页与后续模块之间的共享导航约定：FAB 固定跳转至
-      topic-entry 路由，返回首页后会自动刷新状态。
-    </view>
+    <TopicEntryFooterBar
+      :disabled="!canSubmit"
+      :loading="submitting"
+      :label="submitLabel"
+      @submit="handleSubmit"
+    />
   </view>
 </template>

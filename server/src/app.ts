@@ -3,8 +3,10 @@ import cors from "cors";
 import path from "node:path";
 
 import errorHandler from "./middlewares/errorHandler.js";
+import { apiRateLimiter } from "./middlewares/rateLimit.js";
 import authRoutes from "./routes/auth.js";
 import homeRoutes from "./routes/home.js";
+import topicsRoutes from "./routes/topics.js";
 import userRoutes from "./routes/user.js";
 import { sendSuccess } from "./utils/response.js";
 
@@ -23,8 +25,10 @@ export function createApp() {
     sendSuccess(response, { ok: true });
   });
 
+  app.use("/api", apiRateLimiter);
   app.use("/api/auth", authRoutes);
   app.use("/api/home", homeRoutes);
+  app.use("/api/topics", topicsRoutes);
   app.use("/api/user", userRoutes);
   app.use(errorHandler);
 

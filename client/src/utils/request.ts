@@ -14,6 +14,7 @@ export interface RequestConfig<TData = Record<string, unknown>> {
   headers?: Record<string, string>;
   auth?: boolean;
   retry?: boolean;
+  suppressErrorToast?: boolean;
 }
 
 const DEFAULT_BASE_URL = "http://localhost:3000/api";
@@ -146,9 +147,9 @@ export async function request<
       redirectToLogin();
     }
 
-    if (httpError.envelope?.message) {
+    if (!config.suppressErrorToast && httpError.envelope?.message) {
       showNetworkError(httpError.envelope.message);
-    } else {
+    } else if (!config.suppressErrorToast) {
       showNetworkError();
     }
 

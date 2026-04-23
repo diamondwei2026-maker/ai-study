@@ -12,11 +12,11 @@
 **Language/Version**: TypeScript（strict mode）, Node.js, Vue 3 `<script setup lang="ts">`  
 **Primary Dependencies**: Express 5, cors, dotenv, `express-rate-limit`, `@langchain/openrouter`, `@langchain/core`（现有后端）；Mongoose, express-validator, jsonwebtoken, bcryptjs, pino（本特性与 001 基础设施补齐）；unibest, Pinia, wot-design-uni, UnoCSS, UnoCSS Icons（前端，按宪章初始化）  
 **Storage**: MongoDB（`User`、`KnowledgePoint`、`SharedStandardAnswer`、`ReviewNode`）；客户端本地存储仅沿用登录态，不新增业务离线库  
-**Testing**: server/client `tsc` 编译校验、依据 `contracts/api.md` 的 `200/401/409/502` API 契约冒烟校验、基于 spec 的手工验收场景，以及共享答案复用/新生成两条路径的响应耗时采样；实施阶段需补齐 lint 脚本以满足宪章零错误门禁  
+**Testing**: 通过 `npm run lint`、`npm run typecheck`、`npm run build` 做工作区门禁；通过 `npm run smoke:topics` 覆盖 `contracts/api.md` 的 `200/401/409/502` 契约路径、共享答案复用/新生成两条成功路径，以及响应耗时采样；再结合 spec 的手工验收场景完成页面与交互核对  
 **Target Platform**: uni-app 移动端 APP + Node.js REST API 服务  
 **Project Type**: Mobile App + Web Service  
 **Performance Goals**: 复用共享答案路径下提交到成功返回 p95 小于 3 秒；生成新答案路径下提交到成功返回 p95 小于 12 秒；成功响应必须一次性携带完整 6 个初始复习节点摘要，并通过结构化耗时日志与契约冒烟采样进行验证  
-**Constraints**: 必须遵守宪章锁定栈；标题仅允许 1-30 字纯文字；重复判定按 normalizedTitle / canonicalTitle 两级精确匹配落地；不得向用户呈现部分成功；必须复用 001 提供的 accessToken 签发与登录态存储契约；当前仓库仅有极简 `server/src/index.ts` 和 `client/UI/` 设计资源，实施前需完成分层与工程初始化  
+**Constraints**: 必须遵守宪章锁定栈；标题仅允许 1-30 字纯文字；重复判定按 normalizedTitle / canonicalTitle 两级精确匹配落地；不得向用户呈现部分成功；必须复用 001 提供的 accessToken 签发与登录态存储契约；当前仓库仅有极简 `server/src/index.ts` 和 `client/UI/` 设计资源，实施前需完成分层与工程初始化；生产环境应提供支持事务的 MongoDB，开发环境仅允许在事务不可用时启用手动回滚兜底  
 **Scale/Scope**: 面向 10k 级活跃用户；本特性范围包含 1 个知识点创建接口、1 个录入页面、3 个核心持久化实体、1 条 AI 标准答案服务链路，以及对 001 认证与统一响应基础设施的依赖接入
 
 ## Constitution Check

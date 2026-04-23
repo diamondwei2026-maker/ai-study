@@ -8,6 +8,15 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppTabBar: typeof import('./src/components/shared/navigation/AppTabBar.vue')['default']
+    CreationResultCard: typeof import('./src/components/topic-entry/CreationResultCard.vue')['default']
+    HomeGuidanceBanner: typeof import('./src/components/home/HomeGuidanceBanner.vue')['default']
+    HomeHeroHeader: typeof import('./src/components/home/HomeHeroHeader.vue')['default']
+    HomePrimaryActionCard: typeof import('./src/components/home/HomePrimaryActionCard.vue')['default']
+    HomeStatusCard: typeof import('./src/components/home/HomeStatusCard.vue')['default']
     KnowledgeEntryFab: typeof import('./src/components/shared/navigation/KnowledgeEntryFab.vue')['default']
+    TopicEntryFooterBar: typeof import('./src/components/topic-entry/TopicEntryFooterBar.vue')['default']
+    TopicEntryNavBar: typeof import('./src/components/topic-entry/TopicEntryNavBar.vue')['default']
+    TopicEntryNoticeCard: typeof import('./src/components/topic-entry/TopicEntryNoticeCard.vue')['default']
+    TopicTitleForm: typeof import('./src/components/topic-entry/TopicTitleForm.vue')['default']
   }
 }

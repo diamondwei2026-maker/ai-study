@@ -13,6 +13,8 @@
 - OpenRouter 可用的模型与 API Key
 - `client/` 目录下已初始化或将初始化符合宪章的 unibest 工程；`client/UI/` 保留为设计稿资源目录
 
+说明：当前实现会优先使用 Mongoose session 事务；若本地 MongoDB 未启用副本集导致事务不可用，服务会回退到“写入后手动回滚”兜底，仅建议用于本地开发和契约冒烟，不建议替代正式环境的事务能力。
+
 ## 初始化步骤
 
 ### 1. 后端准备
@@ -30,7 +32,14 @@ MONGODB_URI=mongodb://localhost:27017/ai-study?replicaSet=rs0
 JWT_SECRET=replace-with-real-secret
 OPENROUTER_MODEL=your-openrouter-model
 OPENROUTER_API_KEY=your-openrouter-api-key
+OPENROUTER_MOCK=false
 PORT=3000
+```
+
+如需在本地无 OpenRouter 凭证时跑通“新生成答案”链路，可临时设置：
+
+```env
+OPENROUTER_MOCK=true
 ```
 
 ### 2. 整理后端分层
@@ -39,6 +48,7 @@ PORT=3000
 2. 补齐统一响应工具、错误中间件、JWT 鉴权中间件、Rate Limiting 中间件和结构化日志工具
 3. 增加 `KnowledgePoint`、`SharedStandardAnswer`、`ReviewNode` 三个 Mongoose Schema
 4. 新增 `routes/topics.ts`、`services/topicService.ts`、`services/answerService.ts`、`services/reviewPlanService.ts`
+5. 执行 `npm run smoke:topics`，确认 `200/401/409/502` 契约路径可运行
 
 ### 3. 前端准备
 
@@ -54,6 +64,15 @@ PORT=3000
 3. 接入事务性写入，确保 `KnowledgePoint + ReviewNode x 6` 同步成功或同步失败
 4. 实现录入页表单、提交态和成功/失败反馈
 5. 将创建结果与首页/后续复习流程衔接，并校验首页、复习列表、个人中心的共享录入入口均指向 `topic-entry`
+
+### 5. 推荐门禁命令
+
+```bash
+npm run lint
+npm run typecheck
+npm run build
+npm run smoke:topics
+```
 
 ## 手工验收场景
 
