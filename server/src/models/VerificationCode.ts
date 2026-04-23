@@ -1,4 +1,4 @@
-import { Schema, model, models, type Document, type Model } from "mongoose";
+import mongoose, { Schema, model, type Document, type Model } from "mongoose";
 
 export type VerificationCodeType =
   | "register"
@@ -52,7 +52,7 @@ const verificationCodeSchema = new Schema<VerificationCodeDocument>(
 );
 
 const VerificationCodeModel =
-  (models.VerificationCode as Model<VerificationCodeDocument>) ||
+  (mongoose.models.VerificationCode as Model<VerificationCodeDocument>) ||
   model<VerificationCodeDocument>("VerificationCode", verificationCodeSchema);
 
 export default VerificationCodeModel;

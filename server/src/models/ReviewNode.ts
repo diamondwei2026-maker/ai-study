@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -126,7 +125,7 @@ reviewNodeSchema.index({ userId: 1, knowledgePointId: 1, dueAt: 1 });
 reviewNodeSchema.index({ userId: 1, status: 1, dueAt: 1 });
 
 const ReviewNodeModel =
-  (models.ReviewNode as Model<ReviewNodeDocument>) ||
+  (mongoose.models.ReviewNode as Model<ReviewNodeDocument>) ||
   model<ReviewNodeDocument>("ReviewNode", reviewNodeSchema);
 
 export default ReviewNodeModel;

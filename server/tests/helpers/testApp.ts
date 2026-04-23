@@ -4,7 +4,8 @@ import type { Express } from "express";
 import mongoose from "mongoose";
 import { MongoMemoryServer } from "mongodb-memory-server";
 
-import { avatarUploadDir, createApp } from "../../src/app.js";
+import { createApp } from "../../src/app.js";
+import { avatarUploadDir } from "../../src/config/paths.js";
 
 export interface TestAppContext {
   app: Express;

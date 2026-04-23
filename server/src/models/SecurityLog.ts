@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -57,7 +56,7 @@ const securityLogSchema = new Schema<SecurityLogDocument>(
 securityLogSchema.index({ createdAt: -1 });
 
 const SecurityLogModel =
-  (models.SecurityLog as Model<SecurityLogDocument>) ||
+  (mongoose.models.SecurityLog as Model<SecurityLogDocument>) ||
   model<SecurityLogDocument>("SecurityLog", securityLogSchema);
 
 export default SecurityLogModel;

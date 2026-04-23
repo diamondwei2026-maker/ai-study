@@ -6,6 +6,7 @@
     "lint": "npm --prefix client run lint && npm --prefix server run lint",
     "typecheck": "npm --prefix client run typecheck && npm --prefix server run typecheck",
     "build": "npm --prefix client run build && npm --prefix server run build",
+    "build:ios": "npm --prefix client run build:ios",
     "test": "npm --prefix server run test",
     "smoke:topics": "npm --prefix server run smoke:topics",
     "smoke:reviews": "npm --prefix server run smoke:reviews"

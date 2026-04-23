@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -66,7 +65,8 @@ const sharedStandardAnswerSchema = new Schema<SharedStandardAnswerDocument>(
 sharedStandardAnswerSchema.index({ aliases: 1 });
 
 const SharedStandardAnswerModel =
-  (models.SharedStandardAnswer as Model<SharedStandardAnswerDocument>) ||
+  (mongoose.models
+    .SharedStandardAnswer as Model<SharedStandardAnswerDocument>) ||
   model<SharedStandardAnswerDocument>(
     "SharedStandardAnswer",
     sharedStandardAnswerSchema,

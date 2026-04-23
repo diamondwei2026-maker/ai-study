@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -63,7 +62,7 @@ const userSchema = new Schema<UserDocument>(
 );
 
 const UserModel =
-  (models.User as Model<UserDocument>) ||
+  (mongoose.models.User as Model<UserDocument>) ||
   model<UserDocument>("User", userSchema);
 
 export default UserModel;

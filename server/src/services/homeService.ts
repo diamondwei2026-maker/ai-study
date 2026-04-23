@@ -5,11 +5,12 @@ import HomeActionEventModel, {
   type HomeActionResult,
   type HomeGuidanceType,
 } from "../models/HomeActionEvent.js";
-import ReviewTaskModel from "../models/ReviewTask.js";
+import ReviewNodeModel from "../models/ReviewNode.js";
 import UserModel from "../models/User.js";
 import type { RequestMeta } from "../utils/requestMeta.js";
 import { AppError } from "../utils/response.js";
 import { logger } from "../utils/logger.js";
+import { getReviewListForUser } from "./reviewListService.js";
 
 export type ReviewStatusKind = "PENDING" | "EMPTY" | "OVERDUE" | "UNAVAILABLE";
 
@@ -160,29 +161,23 @@ async function buildReviewStatus(userId: string): Promise<ReviewStatusSummary> {
     const todayStart = startOfToday();
     const todayEnd = endOfToday();
 
-    const [pendingCount, overdueCount, completedToday, latestTask] =
-      await Promise.all([
-        ReviewTaskModel.countDocuments({
-          userId: userObjectId,
-          status: "pending",
-        }),
-        ReviewTaskModel.countDocuments({
-          userId: userObjectId,
-          status: "pending",
-          dueAt: { $lt: now },
-        }),
-        ReviewTaskModel.countDocuments({
-          userId: userObjectId,
-          status: "completed",
-          completedAt: {
-            $gte: todayStart,
-            $lte: todayEnd,
-          },
-        }),
-        ReviewTaskModel.findOne({ userId: userObjectId })
-          .sort({ updatedAt: -1 })
-          .select("updatedAt"),
-      ]);
+    const [reviewList, completedToday, latestTask] = await Promise.all([
+      getReviewListForUser(userId, "all"),
+      ReviewNodeModel.countDocuments({
+        userId: userObjectId,
+        status: "completed",
+        completedAt: {
+          $gte: todayStart,
+          $lte: todayEnd,
+        },
+      }),
+      ReviewNodeModel.findOne({ userId: userObjectId })
+        .sort({ updatedAt: -1 })
+        .select("updatedAt"),
+    ]);
+
+    const pendingCount = reviewList.summary.allCount;
+    const overdueCount = reviewList.summary.overdueCount;
 
     let statusKind: ReviewStatusKind = "EMPTY";
     if (overdueCount > 0) {

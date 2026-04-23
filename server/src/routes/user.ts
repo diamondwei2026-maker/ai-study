@@ -10,7 +10,7 @@ import {
 import { body } from "express-validator";
 import multer from "multer";
 
-import { avatarUploadDir } from "../app.js";
+import { avatarUploadDir } from "../config/paths.js";
 import authMiddleware from "../middlewares/auth.js";
 import validateRequest from "../middlewares/validate.js";
 import {

@@ -4,9 +4,10 @@ import { fileURLToPath } from "url";
 import { ChatOpenRouter } from "@langchain/openrouter";
 import { HumanMessage } from "@langchain/core/messages";
 
-import { avatarUploadDir, createApp } from "./app.js";
 import { connectDatabase } from "./config/db.js";
 import { getServerEnv } from "./config/env.js";
+import { avatarUploadDir } from "./config/paths.js";
+import { createApp } from "./app.js";
 import { logger } from "./utils/logger.js";
 
 const __filename = fileURLToPath(import.meta.url);

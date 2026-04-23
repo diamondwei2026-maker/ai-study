@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -71,7 +70,7 @@ knowledgePointSchema.index({ userId: 1, canonicalTitle: 1 }, { unique: true });
 knowledgePointSchema.index({ userId: 1, normalizedTitle: 1 });
 
 const KnowledgePointModel =
-  (models.KnowledgePoint as Model<KnowledgePointDocument>) ||
+  (mongoose.models.KnowledgePoint as Model<KnowledgePointDocument>) ||
   model<KnowledgePointDocument>("KnowledgePoint", knowledgePointSchema);
 
 export default KnowledgePointModel;

@@ -1,9 +1,11 @@
 import request from "supertest";
 
 import HomeActionEventModel from "../../src/models/HomeActionEvent.js";
+import KnowledgePointModel from "../../src/models/KnowledgePoint.js";
+import ReviewNodeModel from "../../src/models/ReviewNode.js";
+import SharedStandardAnswerModel from "../../src/models/SharedStandardAnswer.js";
 import {
   createAccessTokenFixture,
-  createReviewTaskFixture,
   createUserFixture,
 } from "../helpers/fixtures.js";
 import {
@@ -12,6 +14,52 @@ import {
   teardownTestApp,
   type TestAppContext,
 } from "../helpers/testApp.js";
+
+async function createHomeReviewNodeFixture(input: {
+  userId: string;
+  title: string;
+  dueAt: Date;
+  status?: "pending" | "completed";
+  completedAt?: Date | null;
+}) {
+  const normalizedTitle = input.title.toLowerCase();
+  const sharedAnswer = await SharedStandardAnswerModel.create({
+    canonicalTitle: input.title,
+    normalizedCanonicalTitle: normalizedTitle,
+    aliases: [normalizedTitle],
+    answerContent: `${input.title} 的标准答案`,
+    answerSource: "generated",
+    answerVersion: 1,
+  });
+
+  const knowledgePoint = await KnowledgePointModel.create({
+    userId: input.userId,
+    title: input.title,
+    normalizedTitle,
+    canonicalTitle: input.title,
+    sharedAnswerId: sharedAnswer._id,
+    source: "manualEntry",
+    firstReviewAt: input.dueAt,
+  });
+
+  return ReviewNodeModel.create({
+    userId: input.userId,
+    knowledgePointId: knowledgePoint._id,
+    sequence: 1,
+    offsetCode: "H1",
+    offsetMinutes: 60,
+    nodeType: "initial",
+    sourceNodeId: null,
+    dueAt: input.dueAt,
+    status: input.status ?? "pending",
+    overdueLevel: null,
+    overdueAt: null,
+    wasOverdue: false,
+    overdueReminderSentCount: 0,
+    completedAt: input.completedAt ?? null,
+    nextDueAt: null,
+  });
+}
 
 describe("home dashboard", () => {
   let context: TestAppContext;
@@ -32,18 +80,17 @@ describe("home dashboard", () => {
     const user = await createUserFixture({ phone: "13800138001" });
     const accessToken = createAccessTokenFixture(user._id.toString());
 
-    await createReviewTaskFixture({
+    await createHomeReviewNodeFixture({
       userId: user._id.toString(),
       title: "过期任务",
       dueAt: new Date(Date.now() - 2 * 60 * 60 * 1000),
-      overdueCount: 3,
     });
-    await createReviewTaskFixture({
+    await createHomeReviewNodeFixture({
       userId: user._id.toString(),
       title: "今日待复习",
       dueAt: new Date(Date.now() + 2 * 60 * 60 * 1000),
     });
-    await createReviewTaskFixture({
+    await createHomeReviewNodeFixture({
       userId: user._id.toString(),
       title: "已完成任务",
       dueAt: new Date(Date.now() - 8 * 60 * 60 * 1000),

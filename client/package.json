@@ -7,6 +7,7 @@
     "dev": "unh dev",
     "lint": "npm run typecheck",
     "build": "unh build",
+    "build:ios": "unh build app-ios",
     "typecheck": "tsc --noEmit",
     "about": "unh info"
   },

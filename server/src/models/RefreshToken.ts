@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -48,7 +47,7 @@ const refreshTokenSchema = new Schema<RefreshTokenDocument>(
 );
 
 const RefreshTokenModel =
-  (models.RefreshToken as Model<RefreshTokenDocument>) ||
+  (mongoose.models.RefreshToken as Model<RefreshTokenDocument>) ||
   model<RefreshTokenDocument>("RefreshToken", refreshTokenSchema);
 
 export default RefreshTokenModel;

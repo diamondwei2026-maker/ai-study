@@ -1,7 +1,6 @@
-import {
+import mongoose, {
   Schema,
   model,
-  models,
   type Document,
   type Model,
   Types,
@@ -70,7 +69,7 @@ const homeActionEventSchema = new Schema<HomeActionEventDocument>(
 homeActionEventSchema.index({ userId: 1, createdAt: -1 });
 
 const HomeActionEventModel =
-  (models.HomeActionEvent as Model<HomeActionEventDocument>) ||
+  (mongoose.models.HomeActionEvent as Model<HomeActionEventDocument>) ||
   model<HomeActionEventDocument>("HomeActionEvent", homeActionEventSchema);
 
 export default HomeActionEventModel;

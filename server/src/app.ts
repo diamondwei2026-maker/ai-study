@@ -1,7 +1,7 @@
 import express from "express";
 import cors from "cors";
-import path from "node:path";
 
+import { uploadsRoot } from "./config/paths.js";
 import errorHandler from "./middlewares/errorHandler.js";
 import { apiRateLimiter } from "./middlewares/rateLimit.js";
 import authRoutes from "./routes/auth.js";
@@ -10,9 +10,6 @@ import reviewRoutes from "./routes/review.js";
 import topicsRoutes from "./routes/topics.js";
 import userRoutes from "./routes/user.js";
 import { sendSuccess } from "./utils/response.js";
-
-export const uploadsRoot = path.resolve(process.cwd(), "uploads");
-export const avatarUploadDir = path.join(uploadsRoot, "avatars");
 
 export function createApp() {
   const app = express();
