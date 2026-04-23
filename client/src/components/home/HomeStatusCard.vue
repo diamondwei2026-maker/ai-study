@@ -53,18 +53,32 @@ const summaryText = computed(() => {
 
     <view class="mt-[18rpx] flex items-center">
       <view class="flex-1">
-        <text class="block text-[72rpx] font-[700] leading-none">{{ reviewStatus.pendingCount }}</text>
-        <text class="mt-[14rpx] block text-[24rpx] text-on-brand-muted">今日待复习</text>
+        <text class="block text-[72rpx] font-[700] leading-none">{{
+          reviewStatus.pendingCount
+        }}</text>
+        <text class="mt-[14rpx] block text-[24rpx] text-on-brand-muted"
+          >今日待复习</text
+        >
       </view>
 
-      <view class="mx-[18rpx] h-[92rpx] w-[1rpx] bg-[rgba(255,255,255,0.2)]"></view>
+      <view
+        class="mx-[18rpx] h-[92rpx] w-[1rpx] bg-[rgba(255,255,255,0.2)]"
+      ></view>
 
       <view class="flex-1 text-right">
-        <text class="block text-[60rpx] font-[700] leading-none text-home-signal">{{ rightValue }}</text>
-        <text class="mt-[14rpx] block text-[24rpx] text-home-signal">{{ rightLabel }}</text>
+        <text
+          class="block text-[60rpx] font-[700] leading-none text-home-signal"
+          >{{ rightValue }}</text
+        >
+        <text class="mt-[14rpx] block text-[24rpx] text-home-signal">{{
+          rightLabel
+        }}</text>
       </view>
     </view>
 
-    <text class="mt-[18rpx] block text-[22rpx] leading-[1.6] text-on-brand-muted">{{ summaryText }}</text>
+    <text
+      class="mt-[18rpx] block text-[22rpx] leading-[1.6] text-on-brand-muted"
+      >{{ summaryText }}</text
+    >
   </view>
 </template>

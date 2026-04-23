@@ -38,10 +38,7 @@ router.post(
       .trim()
       .isIn(["createTopic", "startReview", "guidanceAction"])
       .withMessage("actionKey 不支持"),
-    body("targetModule")
-      .trim()
-      .notEmpty()
-      .withMessage("targetModule 不能为空"),
+    body("targetModule").trim().notEmpty().withMessage("targetModule 不能为空"),
     body("guidanceType")
       .optional({ values: "falsy" })
       .trim()

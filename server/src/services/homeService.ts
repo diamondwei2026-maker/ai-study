@@ -11,11 +11,7 @@ import type { RequestMeta } from "../utils/requestMeta.js";
 import { AppError } from "../utils/response.js";
 import { logger } from "../utils/logger.js";
 
-export type ReviewStatusKind =
-  | "PENDING"
-  | "EMPTY"
-  | "OVERDUE"
-  | "UNAVAILABLE";
+export type ReviewStatusKind = "PENDING" | "EMPTY" | "OVERDUE" | "UNAVAILABLE";
 
 export interface ReviewStatusSummary {
   statusKind: ReviewStatusKind;
@@ -83,7 +79,8 @@ function buildPrimaryActions(
   reviewStatus: ReviewStatusSummary,
 ): PrimaryActionEntry[] {
   const reviewEnabled =
-    reviewStatus.statusKind === "PENDING" || reviewStatus.statusKind === "OVERDUE";
+    reviewStatus.statusKind === "PENDING" ||
+    reviewStatus.statusKind === "OVERDUE";
 
   const disabledReason =
     reviewStatus.statusKind === "UNAVAILABLE"
@@ -163,28 +160,29 @@ async function buildReviewStatus(userId: string): Promise<ReviewStatusSummary> {
     const todayStart = startOfToday();
     const todayEnd = endOfToday();
 
-    const [pendingCount, overdueCount, completedToday, latestTask] = await Promise.all([
-      ReviewTaskModel.countDocuments({
-        userId: userObjectId,
-        status: "pending",
-      }),
-      ReviewTaskModel.countDocuments({
-        userId: userObjectId,
-        status: "pending",
-        dueAt: { $lt: now },
-      }),
-      ReviewTaskModel.countDocuments({
-        userId: userObjectId,
-        status: "completed",
-        completedAt: {
-          $gte: todayStart,
-          $lte: todayEnd,
-        },
-      }),
-      ReviewTaskModel.findOne({ userId: userObjectId })
-        .sort({ updatedAt: -1 })
-        .select("updatedAt"),
-    ]);
+    const [pendingCount, overdueCount, completedToday, latestTask] =
+      await Promise.all([
+        ReviewTaskModel.countDocuments({
+          userId: userObjectId,
+          status: "pending",
+        }),
+        ReviewTaskModel.countDocuments({
+          userId: userObjectId,
+          status: "pending",
+          dueAt: { $lt: now },
+        }),
+        ReviewTaskModel.countDocuments({
+          userId: userObjectId,
+          status: "completed",
+          completedAt: {
+            $gte: todayStart,
+            $lte: todayEnd,
+          },
+        }),
+        ReviewTaskModel.findOne({ userId: userObjectId })
+          .sort({ updatedAt: -1 })
+          .select("updatedAt"),
+      ]);
 
     let statusKind: ReviewStatusKind = "EMPTY";
     if (overdueCount > 0) {

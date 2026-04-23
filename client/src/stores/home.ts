@@ -128,7 +128,10 @@ export const useHomeStore = defineStore("home", {
     clearRefreshFlag() {
       this.refreshOnNextShow = false;
     },
-    setLastActionContext(actionKey: HomeActionContext["actionKey"], targetModule: string) {
+    setLastActionContext(
+      actionKey: HomeActionContext["actionKey"],
+      targetModule: string,
+    ) {
       this.lastActionContext = {
         actionKey,
         targetModule,

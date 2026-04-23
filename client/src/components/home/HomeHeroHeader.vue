@@ -32,7 +32,9 @@ const helperText = computed(() => {
 </script>
 
 <template>
-  <view class="relative overflow-hidden bg-brand-gradient px-[32rpx] pb-[86rpx] pt-safe">
+  <view
+    class="relative overflow-hidden bg-brand-gradient px-[32rpx] pb-[86rpx] pt-safe"
+  >
     <view
       class="absolute right-[-88rpx] top-[-58rpx] h-[320rpx] w-[320rpx] rounded-full bg-[rgba(255,255,255,0.08)]"
     ></view>
@@ -48,14 +50,19 @@ const helperText = computed(() => {
           记
         </view>
         <view>
-          <text class="block text-[42rpx] font-[700] text-on-brand">记忆助手</text>
-          <text class="mt-[8rpx] block text-[22rpx] tracking-[2rpx] text-on-brand-muted"
+          <text class="block text-[42rpx] font-[700] text-on-brand"
+            >记忆助手</text
+          >
+          <text
+            class="mt-[8rpx] block text-[22rpx] tracking-[2rpx] text-on-brand-muted"
             >智能复习 · 费曼输出</text
           >
         </view>
       </view>
 
-      <text class="mt-[18rpx] block text-[22rpx] text-on-brand-muted">{{ helperText }}</text>
+      <text class="mt-[18rpx] block text-[22rpx] text-on-brand-muted">{{
+        helperText
+      }}</text>
 
       <view class="mt-[34rpx]">
         <slot />

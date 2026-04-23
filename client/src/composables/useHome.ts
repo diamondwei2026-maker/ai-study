@@ -26,8 +26,9 @@ export function useHome() {
   const errorMessage = computed(() => homeStore.errorMessage);
   const reviewAction = computed(
     () =>
-      dashboard.value.primaryActions.find((action) => action.key === "startReview") ??
-      null,
+      dashboard.value.primaryActions.find(
+        (action) => action.key === "startReview",
+      ) ?? null,
   );
   const guidanceAction = computed(
     () =>
@@ -73,7 +74,9 @@ export function useHome() {
       homeStore.setDashboard(response.data);
       return response.data;
     } catch {
-      homeStore.applyUnavailableFallback("首页状态暂不可用，已切换到可用兜底。\n");
+      homeStore.applyUnavailableFallback(
+        "首页状态暂不可用，已切换到可用兜底。\n",
+      );
       return null;
     } finally {
       homeStore.setLoading(false);

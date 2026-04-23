@@ -28,7 +28,9 @@ const guidanceActionLabel = computed(() =>
   guidanceAction.value?.key === "createTopic" ? "去新建知识点" : "去开始复习",
 );
 
-const showStatusNote = computed(() => Boolean(usingSnapshot.value || errorMessage.value));
+const showStatusNote = computed(() =>
+  Boolean(usingSnapshot.value || errorMessage.value),
+);
 
 function handleGuidanceAction() {
   if (!guidanceAction.value) {
@@ -67,7 +69,9 @@ onPullDownRefresh(() => {
       />
     </HomeHeroHeader>
 
-    <view class="-mt-[22rpx] rounded-t-[42rpx] bg-page-bg px-[24rpx] pb-[40rpx] pt-[18rpx]">
+    <view
+      class="-mt-[22rpx] rounded-t-[42rpx] bg-page-bg px-[24rpx] pb-[40rpx] pt-[18rpx]"
+    >
       <HomeGuidanceBanner
         :guidance="dashboard.guidance"
         :action-label="guidanceActionLabel"
@@ -86,14 +90,20 @@ onPullDownRefresh(() => {
         v-if="showStatusNote"
         class="mt-[18rpx] rounded-[24rpx] bg-[rgba(255,255,255,0.72)] px-[24rpx] py-[18rpx] text-[22rpx] leading-[1.7] text-text-secondary"
       >
-        {{ usingSnapshot ? "当前展示最近一次成功快照，返回首页时会继续尝试刷新最新状态。" : errorMessage }}
+        {{
+          usingSnapshot
+            ? "当前展示最近一次成功快照，返回首页时会继续尝试刷新最新状态。"
+            : errorMessage
+        }}
       </view>
 
       <view
         class="mt-[18rpx] flex items-center justify-between rounded-[24rpx] bg-[rgba(255,255,255,0.68)] px-[22rpx] py-[18rpx] text-[22rpx] text-text-secondary"
       >
         <text>{{ loading ? "首页状态同步中" : "关键入口已准备就绪" }}</text>
-        <text class="font-[600] text-brand-primary">{{ dashboard.generatedAt.slice(11, 16) }}</text>
+        <text class="font-[600] text-brand-primary">{{
+          dashboard.generatedAt.slice(11, 16)
+        }}</text>
       </view>
     </view>
 

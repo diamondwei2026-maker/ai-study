@@ -1,8 +1,4 @@
-export type ReviewStatusKind =
-  | "PENDING"
-  | "EMPTY"
-  | "OVERDUE"
-  | "UNAVAILABLE";
+export type ReviewStatusKind = "PENDING" | "EMPTY" | "OVERDUE" | "UNAVAILABLE";
 
 export type HomeGuidanceType =
   | "CREATE_FIRST"

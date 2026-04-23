@@ -48,8 +48,13 @@ const badgeText = computed(() => {
         >
           {{ badgeText }}
         </view>
-        <text class="mt-[14rpx] block text-[38rpx] font-[700] text-on-brand">{{ action?.label ?? "开始复习" }}</text>
-        <text class="mt-[10rpx] block text-[24rpx] leading-[1.6] text-on-brand-muted">{{ subtitle }}</text>
+        <text class="mt-[14rpx] block text-[38rpx] font-[700] text-on-brand">{{
+          action?.label ?? "开始复习"
+        }}</text>
+        <text
+          class="mt-[10rpx] block text-[24rpx] leading-[1.6] text-on-brand-muted"
+          >{{ subtitle }}</text
+        >
       </view>
 
       <view

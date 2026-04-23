@@ -36,13 +36,21 @@ const pillText = computed(() => {
       </view>
 
       <view class="flex-1">
-        <text class="block text-[28rpx] font-[700] leading-[1.5] text-home-banner-text">{{ guidance.title }}</text>
-        <text class="mt-[8rpx] block text-[22rpx] leading-[1.7] text-home-banner-muted">{{ guidance.description }}</text>
+        <text
+          class="block text-[28rpx] font-[700] leading-[1.5] text-home-banner-text"
+          >{{ guidance.title }}</text
+        >
+        <text
+          class="mt-[8rpx] block text-[22rpx] leading-[1.7] text-home-banner-muted"
+          >{{ guidance.description }}</text
+        >
 
         <view
           class="mt-[16rpx] inline-flex items-center rounded-[999rpx] bg-home-banner-pill px-[18rpx] py-[10rpx]"
         >
-          <text class="text-[22rpx] font-[700] text-home-banner-text">{{ pillText }}</text>
+          <text class="text-[22rpx] font-[700] text-home-banner-text">{{
+            pillText
+          }}</text>
           <text class="ml-[10rpx] text-[22rpx] text-home-banner-text">›</text>
         </view>
       </view>
