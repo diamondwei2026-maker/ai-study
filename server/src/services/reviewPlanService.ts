@@ -63,8 +63,16 @@ export async function createInitialReviewNodes(input: {
     sequence: draft.sequence,
     offsetCode: draft.offsetCode,
     offsetMinutes: draft.offsetMinutes,
+    nodeType: "initial" as const,
+    sourceNodeId: null,
     dueAt: draft.dueAt,
     status: "pending" as const,
+    overdueLevel: null,
+    overdueAt: null,
+    wasOverdue: false,
+    overdueReminderSentCount: 0,
+    completedAt: null,
+    nextDueAt: null,
   }));
 
   const nodes = await ReviewNodeModel.create(drafts, {

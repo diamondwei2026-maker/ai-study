@@ -10,6 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "smoke:topics": "vitest run tests/integration/topics.contract.test.ts",
+    "smoke:reviews": "vitest run tests/integration/review.contract.test.ts",
     "test:watch": "vitest",
     "load:test": "node tests/performance/auth-profile.load.js"
   },

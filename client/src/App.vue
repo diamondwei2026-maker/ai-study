@@ -85,6 +85,19 @@ page {
   --topic-notice-bg: #f4f7ff;
   --topic-notice-border: #c5d4ff;
   --topic-notice-text: #5d65d6;
+  --review-hero-top: #ffe9c8;
+  --review-hero-bottom: #fff7ea;
+  --review-panel: #fff8f0;
+  --review-panel-border: #f2dbc4;
+  --review-accent: #eb7a2e;
+  --review-accent-soft: #ffe5c2;
+  --review-input-bg: #fffdf8;
+  --review-short: #f7aa5d;
+  --review-medium: #f48656;
+  --review-long: #ea5656;
+  --review-banner-bg: #fff2de;
+  --review-banner-border: #ffd1a5;
+  --review-mask: rgba(27, 22, 62, 0.42);
   --topic-disabled-bg: #e3e7ef;
   --topic-disabled-text: #7f8797;
   --topic-footer-surface: rgba(255, 255, 255, 0.96);
@@ -95,6 +108,8 @@ page {
   --shadow-hero: 0 26rpx 80rpx rgba(77, 56, 186, 0.22);
   --shadow-topic-card: 0 16rpx 52rpx rgba(74, 63, 140, 0.08);
   --shadow-topic-footer: 0 -10rpx 36rpx rgba(58, 49, 123, 0.08);
+  --shadow-review-panel: 0 18rpx 56rpx rgba(127, 94, 38, 0.12);
+  --shadow-review-sheet: 0 -18rpx 72rpx rgba(37, 28, 85, 0.18);
   background: var(--page-bg);
   color: var(--text-primary);
   font-family: "Avenir Next", "PingFang SC", "Microsoft YaHei", sans-serif;

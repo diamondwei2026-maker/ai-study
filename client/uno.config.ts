@@ -42,6 +42,19 @@ export default defineConfig({
       "topic-footer-surface": "var(--topic-footer-surface)",
       "topic-success-bg": "var(--topic-success-bg)",
       "topic-success-text": "var(--topic-success-text)",
+      "review-hero-top": "var(--review-hero-top)",
+      "review-hero-bottom": "var(--review-hero-bottom)",
+      "review-panel": "var(--review-panel)",
+      "review-panel-border": "var(--review-panel-border)",
+      "review-accent": "var(--review-accent)",
+      "review-accent-soft": "var(--review-accent-soft)",
+      "review-input-bg": "var(--review-input-bg)",
+      "review-short": "var(--review-short)",
+      "review-medium": "var(--review-medium)",
+      "review-long": "var(--review-long)",
+      "review-banner-bg": "var(--review-banner-bg)",
+      "review-banner-border": "var(--review-banner-border)",
+      "review-mask": "var(--review-mask)",
     },
     boxShadow: {
       card: "var(--shadow-card)",
@@ -49,6 +62,8 @@ export default defineConfig({
       hero: "var(--shadow-hero)",
       "topic-card": "var(--shadow-topic-card)",
       "topic-footer": "var(--shadow-topic-footer)",
+      "review-panel": "var(--shadow-review-panel)",
+      "review-sheet": "var(--shadow-review-sheet)",
     },
   },
   shortcuts: {
@@ -66,6 +81,10 @@ export default defineConfig({
       "rounded-[32rpx] border border-topic-card-border bg-surface-card shadow-topic-card",
     "topic-notice-card":
       "rounded-[26rpx] border border-topic-notice-border bg-topic-notice-bg shadow-topic-card",
+    "review-card":
+      "rounded-[30rpx] border border-review-panel-border bg-surface-card shadow-review-panel",
+    "review-tab-active":
+      "border-review-accent bg-review-accent-soft text-review-accent",
     "pt-safe": "pt-[calc(env(safe-area-inset-top)+0px)]",
     "pb-safe": "pb-[calc(env(safe-area-inset-bottom)+0px)]",
   },

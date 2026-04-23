@@ -7,7 +7,8 @@
     "typecheck": "npm --prefix client run typecheck && npm --prefix server run typecheck",
     "build": "npm --prefix client run build && npm --prefix server run build",
     "test": "npm --prefix server run test",
-    "smoke:topics": "npm --prefix server run smoke:topics"
+    "smoke:topics": "npm --prefix server run smoke:topics",
+    "smoke:reviews": "npm --prefix server run smoke:reviews"
   },
   "repository": {
     "type": "git",

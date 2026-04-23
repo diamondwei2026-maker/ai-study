@@ -1,36 +1,131 @@
 <script setup lang="ts">
-import { onHide } from "@dcloudio/uni-app";
+import { ref } from "vue";
+import { onLoad, onPullDownRefresh, onShow } from "@dcloudio/uni-app";
 
+import ReviewEmptyState from "@/components/review/ReviewEmptyState.vue";
+import ReviewListHeader from "@/components/review/ReviewListHeader.vue";
+import ReviewRiskBanner from "@/components/review/ReviewRiskBanner.vue";
+import ReviewTabs from "@/components/review/ReviewTabs.vue";
+import ReviewTaskCard from "@/components/review/ReviewTaskCard.vue";
 import AppTabBar from "@/components/shared/navigation/AppTabBar.vue";
 import KnowledgeEntryFab from "@/components/shared/navigation/KnowledgeEntryFab.vue";
+import { useReviewList } from "@/composables/useReviewList";
 import { pinia } from "@/stores";
-import { useHomeStore } from "@/stores/home";
+import { useReviewStore } from "@/stores/review";
+import type { ReviewTab } from "@/types/review";
 
-const homeStore = useHomeStore(pinia);
+const reviewStore = useReviewStore(pinia);
+const {
+  fetchList,
+  listError,
+  loading,
+  openTask,
+  refreshOnShow,
+  selectedTab,
+  summary,
+  switchTab,
+  tasks,
+} = useReviewList();
 
-onHide(() => {
-  homeStore.markRefreshNeeded();
+const alertSnapshot = ref(0);
+
+function resolveTab(value: string | string[] | undefined): ReviewTab | null {
+  const normalizedValue = Array.isArray(value) ? value[0] : value;
+
+  if (
+    normalizedValue === "pending" ||
+    normalizedValue === "overdue" ||
+    normalizedValue === "all"
+  ) {
+    return normalizedValue;
+  }
+
+  return null;
+}
+
+function maybeShowRiskAlert() {
+  if (
+    !summary.value.showOverdueAlert ||
+    summary.value.overdueCount === alertSnapshot.value
+  ) {
+    return;
+  }
+
+  alertSnapshot.value = summary.value.overdueCount;
+  uni.showModal({
+    title: "过期任务积压",
+    content: `当前共有 ${summary.value.overdueCount} 个过期任务，请优先处理长期过期和置顶提醒项。`,
+    confirmText: "我知道了",
+    showCancel: false,
+  });
+}
+
+async function syncPage() {
+  await refreshOnShow();
+  maybeShowRiskAlert();
+}
+
+async function handleTabChange(tab: ReviewTab) {
+  await switchTab(tab);
+  maybeShowRiskAlert();
+}
+
+onLoad((options) => {
+  const initialTab = resolveTab(options?.tab);
+  if (initialTab) {
+    reviewStore.setSelectedTab(initialTab);
+  }
+});
+
+onShow(() => {
+  void syncPage();
+});
+
+onPullDownRefresh(() => {
+  void fetchList(selectedTab.value);
 });
 </script>
 
 <template>
-  <view class="min-h-screen bg-page-bg px-[24rpx] pb-[180rpx] pt-safe">
+  <view class="min-h-screen bg-page-bg px-[24rpx] pb-[186rpx] pt-safe">
+    <ReviewListHeader :summary="summary" />
+
+    <ReviewRiskBanner
+      v-if="summary.showOverdueAlert"
+      :overdue-count="summary.overdueCount"
+      :pinned-count="summary.pinnedKnowledgePointIds.length"
+    />
+
+    <ReviewTabs
+      :model-value="selectedTab"
+      :summary="summary"
+      @update:model-value="handleTabChange"
+    />
+
     <view
-      class="rounded-[32rpx] bg-brand-gradient px-[28rpx] pb-[38rpx] pt-[28rpx] text-on-brand"
+      v-if="listError"
+      class="review-card mt-[24rpx] px-[24rpx] py-[24rpx] text-[24rpx] leading-[1.7] text-review-long"
     >
-      <text class="text-[40rpx] font-[700]">复习中心</text>
-      <text class="mt-[12rpx] block text-[24rpx] text-on-brand-muted"
-        >首页已接通真实复习入口；004
-        复习流程交付后，这里会承载真实列表与执行流。</text
-      >
+      {{ listError }}
     </view>
 
     <view
-      class="mt-[24rpx] card-surface p-[28rpx] text-[28rpx] leading-[1.8] text-text-secondary"
+      v-else-if="loading && tasks.length === 0"
+      class="review-card mt-[24rpx] px-[24rpx] py-[28rpx] text-[24rpx] text-text-secondary"
     >
-      当前页面保留明确占位反馈，但已经作为首页“开始复习”的真实导航目标，便于完成
-      002 首页关键操作链路与返回刷新逻辑的联调。
+      正在同步复习列表...
     </view>
+
+    <view v-else-if="tasks.length" class="mt-[24rpx] flex flex-col gap-[18rpx]">
+      <ReviewTaskCard
+        v-for="task in tasks"
+        :key="task.taskId"
+        :task="task"
+        @select="openTask"
+      />
+    </view>
+
+    <ReviewEmptyState v-else :tab="selectedTab" />
 
     <KnowledgeEntryFab />
     <AppTabBar active="review" />

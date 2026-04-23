@@ -6,6 +6,7 @@ import errorHandler from "./middlewares/errorHandler.js";
 import { apiRateLimiter } from "./middlewares/rateLimit.js";
 import authRoutes from "./routes/auth.js";
 import homeRoutes from "./routes/home.js";
+import reviewRoutes from "./routes/review.js";
 import topicsRoutes from "./routes/topics.js";
 import userRoutes from "./routes/user.js";
 import { sendSuccess } from "./utils/response.js";
@@ -28,6 +29,7 @@ export function createApp() {
   app.use("/api", apiRateLimiter);
   app.use("/api/auth", authRoutes);
   app.use("/api/home", homeRoutes);
+  app.use("/api/reviews", reviewRoutes);
   app.use("/api/topics", topicsRoutes);
   app.use("/api/user", userRoutes);
   app.use(errorHandler);

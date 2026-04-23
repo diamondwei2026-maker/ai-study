@@ -8,6 +8,8 @@ import {
 } from "mongoose";
 
 export type ReviewNodeStatus = "pending" | "completed" | "overdue";
+export type ReviewNodeType = "initial" | "reinforcement" | "continuation";
+export type ReviewOverdueLevel = "short" | "medium" | "long";
 
 export interface ReviewNodeDocument extends Document {
   _id: Types.ObjectId;
@@ -16,8 +18,16 @@ export interface ReviewNodeDocument extends Document {
   sequence: number;
   offsetCode: string;
   offsetMinutes: number;
+  nodeType: ReviewNodeType;
+  sourceNodeId?: Types.ObjectId | null;
   dueAt: Date;
   status: ReviewNodeStatus;
+  overdueLevel?: ReviewOverdueLevel | null;
+  overdueAt?: Date | null;
+  wasOverdue: boolean;
+  overdueReminderSentCount: number;
+  completedAt?: Date | null;
+  nextDueAt?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -40,7 +50,6 @@ const reviewNodeSchema = new Schema<ReviewNodeDocument>(
       type: Number,
       required: true,
       min: 1,
-      max: 6,
     },
     offsetCode: {
       type: String,
@@ -51,6 +60,18 @@ const reviewNodeSchema = new Schema<ReviewNodeDocument>(
       type: Number,
       required: true,
       min: 1,
+    },
+    nodeType: {
+      type: String,
+      enum: ["initial", "reinforcement", "continuation"],
+      required: true,
+      default: "initial",
+    },
+    sourceNodeId: {
+      type: Schema.Types.ObjectId,
+      ref: "ReviewNode",
+      default: null,
+      index: true,
     },
     dueAt: {
       type: Date,
@@ -63,6 +84,37 @@ const reviewNodeSchema = new Schema<ReviewNodeDocument>(
       required: true,
       default: "pending",
     },
+    overdueLevel: {
+      type: String,
+      enum: ["short", "medium", "long"],
+      default: null,
+    },
+    overdueAt: {
+      type: Date,
+      default: null,
+    },
+    wasOverdue: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
+    overdueReminderSentCount: {
+      type: Number,
+      required: true,
+      default: 0,
+      min: 0,
+      max: 2,
+    },
+    completedAt: {
+      type: Date,
+      default: null,
+      index: true,
+    },
+    nextDueAt: {
+      type: Date,
+      default: null,
+      index: true,
+    },
   },
   {
     timestamps: true,
@@ -71,6 +123,7 @@ const reviewNodeSchema = new Schema<ReviewNodeDocument>(
 
 reviewNodeSchema.index({ knowledgePointId: 1, sequence: 1 }, { unique: true });
 reviewNodeSchema.index({ userId: 1, knowledgePointId: 1, dueAt: 1 });
+reviewNodeSchema.index({ userId: 1, status: 1, dueAt: 1 });
 
 const ReviewNodeModel =
   (models.ReviewNode as Model<ReviewNodeDocument>) ||
