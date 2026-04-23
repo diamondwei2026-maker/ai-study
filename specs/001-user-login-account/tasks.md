@@ -18,10 +18,10 @@
 
 **Purpose**: 后端依赖安装、环境配置、前端 unibest 项目初始化
 
-- [ ] T001 安装后端依赖：mongoose jsonwebtoken bcryptjs express-validator multer @types/\* 至 server/package.json
-- [ ] T002 [P] 在 server/ 根目录创建 .env.example 并定义 MONGODB_URI、JWT_SECRET、JWT_EXPIRES_IN、JWT_REFRESH_EXPIRES_IN、SMS_MOCK 等环境变量
-- [ ] T003 [P] 创建 unibest 前端项目至 client/ 目录（Vue 3 + TypeScript + UnoCSS + wot-design-uni + Pinia），并初始化页面视觉 token（如 page-bg、text-primary、text-secondary、surface-card、border-subtle、brand-primary、brand-gradient、shadow-card、danger-surface、danger-text）
-- [ ] T004 在 server/src/index.ts 中增加 MongoDB 连接逻辑（mongoose.connect）并保留现有 Express 结构
+- [x] T001 安装后端依赖：mongoose jsonwebtoken bcryptjs express-validator multer @types/\* 至 server/package.json
+- [x] T002 [P] 在 server/ 根目录创建 .env.example 并定义 MONGODB_URI、JWT_SECRET、JWT_EXPIRES_IN、JWT_REFRESH_EXPIRES_IN、SMS_MOCK 等环境变量
+- [x] T003 [P] 创建 unibest 前端项目至 client/ 目录（Vue 3 + TypeScript + UnoCSS + wot-design-uni + Pinia），并初始化页面视觉 token（如 page-bg、text-primary、text-secondary、surface-card、border-subtle、brand-primary、brand-gradient、shadow-card、danger-surface、danger-text）
+- [x] T004 在 server/src/index.ts 中增加 MongoDB 连接逻辑（mongoose.connect）并保留现有 Express 结构
 
 **Checkpoint**: 后端可启动并连接 MongoDB，前端 unibest 项目与基础视觉 token 可运行
 
@@ -33,19 +33,19 @@
 
 **⚠️ CRITICAL**: 所有用户故事均须等待本阶段完成后才能开始
 
-- [ ] T005 [P] 创建统一响应封装工具 server/src/utils/response.ts（success / fail / error 三种格式，遵循 { code, message, data } 结构）
-- [ ] T006 [P] 创建 JWT 工具 server/src/utils/token.ts（generateAccessToken / generateRefreshToken / verifyToken）
-- [ ] T007 创建 User Mongoose Schema 和 Model server/src/models/User.ts（包含 phone、nickname、avatar、password、status、loginFailCount、lockedUntil 字段）
-- [ ] T008 [P] 创建 VerificationCode Mongoose Schema 和 Model server/src/models/VerificationCode.ts（包含 phone、code、type、used、expiresAt TTL 索引）
-- [ ] T009 [P] 创建 RefreshToken Mongoose Schema 和 Model server/src/models/RefreshToken.ts（包含 userId、token 唯一索引、deviceInfo、expiresAt TTL 索引）
-- [ ] T010 [P] 创建 SecurityLog Mongoose Schema 和 Model server/src/models/SecurityLog.ts（包含 userId、action、result、ip、deviceInfo、detail、createdAt 索引）
-- [ ] T011 实现 JWT 校验中间件 server/src/middlewares/auth.ts（从 Authorization header 提取并验证 Access Token，注入 req.userId）
-- [ ] T012 [P] 实现参数校验中间件 server/src/middlewares/validate.ts（基于 express-validator 的统一错误收集）
-- [ ] T013 [P] 实现全局错误处理中间件 server/src/middlewares/errorHandler.ts（统一捕获并返回标准错误响应）
-- [ ] T014 创建模拟短信服务 server/src/services/smsService.ts（定义 ISmsService 接口，MockSmsService 实现：内存存储验证码，开发环境直接返回验证码）
-- [ ] T015 在 server/src/index.ts 中注册 errorHandler 中间件，并初始化 multer 上传目录 /uploads/avatars（目录缺失时自动创建）
-- [ ] T016 [P] 创建前端请求封装 client/src/utils/request.ts（基于 uni.request 封装，自动注入 Authorization 头，自动调用刷新 Token，401 时跳转登录页）
-- [ ] T017 [P] 创建前端 Pinia 用户状态 store client/src/stores/user.ts（存储 accessToken、refreshToken、userInfo，持久化至 uni.setStorageSync）
+- [x] T005 [P] 创建统一响应封装工具 server/src/utils/response.ts（success / fail / error 三种格式，遵循 { code, message, data } 结构）
+- [x] T006 [P] 创建 JWT 工具 server/src/utils/token.ts（generateAccessToken / generateRefreshToken / verifyToken）
+- [x] T007 创建 User Mongoose Schema 和 Model server/src/models/User.ts（包含 phone、nickname、avatar、password、status、loginFailCount、lockedUntil 字段）
+- [x] T008 [P] 创建 VerificationCode Mongoose Schema 和 Model server/src/models/VerificationCode.ts（包含 phone、code、type、used、expiresAt TTL 索引）
+- [x] T009 [P] 创建 RefreshToken Mongoose Schema 和 Model server/src/models/RefreshToken.ts（包含 userId、token 唯一索引、deviceInfo、expiresAt TTL 索引）
+- [x] T010 [P] 创建 SecurityLog Mongoose Schema 和 Model server/src/models/SecurityLog.ts（包含 userId、action、result、ip、deviceInfo、detail、createdAt 索引）
+- [x] T011 实现 JWT 校验中间件 server/src/middlewares/auth.ts（从 Authorization header 提取并验证 Access Token，注入 req.userId）
+- [x] T012 [P] 实现参数校验中间件 server/src/middlewares/validate.ts（基于 express-validator 的统一错误收集）
+- [x] T013 [P] 实现全局错误处理中间件 server/src/middlewares/errorHandler.ts（统一捕获并返回标准错误响应）
+- [x] T014 创建模拟短信服务 server/src/services/smsService.ts（定义 ISmsService 接口，MockSmsService 实现：内存存储验证码，开发环境直接返回验证码）
+- [x] T015 在 server/src/index.ts 中注册 errorHandler 中间件，并初始化 multer 上传目录 /uploads/avatars（目录缺失时自动创建）
+- [x] T016 [P] 创建前端请求封装 client/src/utils/request.ts（基于 uni.request 封装，自动注入 Authorization 头，自动调用刷新 Token，401 时跳转登录页）
+- [x] T017 [P] 创建前端 Pinia 用户状态 store client/src/stores/user.ts（存储 accessToken、refreshToken、userInfo，持久化至 uni.setStorageSync）
 
 **Checkpoint**: 基础设施就绪，各用户故事可并行开始
 
@@ -59,14 +59,14 @@
 
 ### 后端实现
 
-- [ ] T018 [US1] 实现发送验证码业务逻辑 server/src/services/authService.ts（sendCode：校验手机号格式、60 秒频率限制、生成 6 位验证码、调用 smsService 发送并存入 VerificationCode）
-- [ ] T019 [US1] 实现注册业务逻辑 server/src/services/authService.ts（register：校验验证码有效性、检查手机号唯一性、创建 User 文档、生成 JWT 双 Token、存入 RefreshToken、写入 SecurityLog）
-- [ ] T020 [US1] 创建认证路由文件 server/src/routes/auth.ts 并注册 POST /api/auth/send-code 和 POST /api/auth/register 端点（含 express-validator 参数校验规则）
-- [ ] T021 [US1] 在 server/src/index.ts 中挂载 auth 路由 `/api/auth`
+- [x] T018 [US1] 实现发送验证码业务逻辑 server/src/services/authService.ts（sendCode：校验手机号格式、60 秒频率限制、生成 6 位验证码、调用 smsService 发送并存入 VerificationCode）
+- [x] T019 [US1] 实现注册业务逻辑 server/src/services/authService.ts（register：校验验证码有效性、检查手机号唯一性、创建 User 文档、生成 JWT 双 Token、存入 RefreshToken、写入 SecurityLog）
+- [x] T020 [US1] 创建认证路由文件 server/src/routes/auth.ts 并注册 POST /api/auth/send-code 和 POST /api/auth/register 端点（含 express-validator 参数校验规则）
+- [x] T021 [US1] 在 server/src/index.ts 中挂载 auth 路由 `/api/auth`
 
 ### 前端实现（按设计稿布局与 token 契约还原 login.png）
 
-- [ ] T022 [US1] 创建登录/注册页面 client/src/pages/login/index.vue，按设计稿布局与 token 契约还原界面：
+- [x] T022 [US1] 创建登录/注册页面 client/src/pages/login/index.vue，按设计稿布局与 token 契约还原界面：
   - 页面背景使用 `page-bg` token，适配安全区域顶部
   - 顶部 Logo 图片居中，宽 120rpx，距顶 120rpx
   - 主标题「欢迎登录」字号 48rpx、字重 600，使用 `text-primary` token，距 Logo 32rpx
@@ -78,8 +78,8 @@
   - 密码输入框使用 password 类型，右侧显示/隐藏眼睛图标
   - 主操作按钮「登录 / 注册」高度 96rpx、圆角 48rpx，使用 `brand-gradient` token，字号 34rpx、字重 600，距输入区 48rpx
   - 底部协议文字字号 24rpx，正文使用 `text-secondary` token，链接使用 `brand-primary` token
-- [ ] T023 [US1] 实现登录/注册页的交互逻辑 composable client/src/composables/useAuth.ts（sendCode：倒计时 60s；register：调用 API → 写入 store → 跳转已登录默认页 `mine`；表单校验：手机号正则、验证码 6 位数字、密码 8 位含数字字母；缓存未完成表单草稿以支持异常退出后恢复或重填）
-- [ ] T024 [US1] 在 client/src/pages/login/index.vue 中引入并调用 useAuth composable，绑定表单数据和事件
+- [x] T023 [US1] 实现登录/注册页的交互逻辑 composable client/src/composables/useAuth.ts（sendCode：倒计时 60s；register：调用 API → 写入 store → 跳转已登录默认页 `mine`；表单校验：手机号正则、验证码 6 位数字、密码 8 位含数字字母；缓存未完成表单草稿以支持异常退出后恢复或重填）
+- [x] T024 [US1] 在 client/src/pages/login/index.vue 中引入并调用 useAuth composable，绑定表单数据和事件
 
 **Checkpoint**: 可完整走通新用户注册流程，登录页 UI 与设计稿布局及 token 契约一致，并进入已登录默认页 `mine`
 
@@ -93,13 +93,13 @@
 
 ### 后端实现
 
-- [ ] T025 [US2] 实现登录业务逻辑 server/src/services/authService.ts（login：支持 code/password 二选一；密码登录校验 loginFailCount >= 5 锁定逻辑；验证码登录可解除锁定；生成双 Token；写 SecurityLog）
-- [ ] T026 [US2] 在 server/src/routes/auth.ts 中注册 POST /api/auth/login 端点（含参数校验：phone 必填，code 与 password 至少一个）
+- [x] T025 [US2] 实现登录业务逻辑 server/src/services/authService.ts（login：支持 code/password 二选一；密码登录校验 loginFailCount >= 5 锁定逻辑；验证码登录可解除锁定；生成双 Token；写 SecurityLog）
+- [x] T026 [US2] 在 server/src/routes/auth.ts 中注册 POST /api/auth/login 端点（含参数校验：phone 必填，code 与 password 至少一个）
 
 ### 前端实现
 
-- [ ] T027 [US2] 在 client/src/composables/useAuth.ts 中实现 login 函数（调用 POST /api/auth/login → 写入 store → 跳转已登录默认页 `mine`；处理 403 锁定提示含剩余解锁时间；处理网络异常）
-- [ ] T028 [US2] 在登录页 client/src/pages/login/index.vue 中切换注册/登录模式（Tab 文字、按钮文字、表单字段按设计稿对应切换，切换时清空已填内容）
+- [x] T027 [US2] 在 client/src/composables/useAuth.ts 中实现 login 函数（调用 POST /api/auth/login → 写入 store → 跳转已登录默认页 `mine`；处理 403 锁定提示含剩余解锁时间；处理网络异常）
+- [x] T028 [US2] 在登录页 client/src/pages/login/index.vue 中切换注册/登录模式（Tab 文字、按钮文字、表单字段按设计稿对应切换，切换时清空已填内容）
 
 **Checkpoint**: 验证码登录和密码登录均可正常工作，账号锁定提示正确显示，并统一进入默认落点 `mine`
 
@@ -113,13 +113,13 @@
 
 ### 后端实现
 
-- [ ] T029 [US3] 在 server/src/routes/auth.ts 中注册 POST /api/auth/refresh 端点（authService.refreshToken：验证 RefreshToken 有效性和数据库记录，生成新 Access Token）
-- [ ] T030 [US3] 在 server/src/routes/auth.ts 中注册 POST /api/auth/logout 端点（authService.logout：从数据库删除 RefreshToken 记录，写 SecurityLog）
+- [x] T029 [US3] 在 server/src/routes/auth.ts 中注册 POST /api/auth/refresh 端点（authService.refreshToken：验证 RefreshToken 有效性和数据库记录，生成新 Access Token）
+- [x] T030 [US3] 在 server/src/routes/auth.ts 中注册 POST /api/auth/logout 端点（authService.logout：从数据库删除 RefreshToken 记录，写 SecurityLog）
 
 ### 前端实现
 
-- [ ] T031 [US3] 在 client/src/utils/request.ts 中完善 Token 自动刷新逻辑（受保护请求返回 401 或 Access Token 过期 → 调用 /api/auth/refresh → 重放原请求；Refresh Token 失效 → 清除 store → 跳转登录页；并发请求队列处理避免重复刷新）
-- [ ] T032 [US3] 在 client/src/app.vue 或 pages.json 路由守卫中实现登录态检测（冷启动与从后台恢复前台时读取 store → 验证 accessToken 有效期 → 失效则调用 refresh → 成功进默认落点 `mine`，失败跳登录页）
+- [x] T031 [US3] 在 client/src/utils/request.ts 中完善 Token 自动刷新逻辑（受保护请求返回 401 或 Access Token 过期 → 调用 /api/auth/refresh → 重放原请求；Refresh Token 失效 → 清除 store → 跳转登录页；并发请求队列处理避免重复刷新）
+- [x] T032 [US3] 在 client/src/app.vue 或 pages.json 路由守卫中实现登录态检测（冷启动与从后台恢复前台时读取 store → 验证 accessToken 有效期 → 失效则调用 refresh → 成功进默认落点 `mine`，失败跳登录页）
 
 **Checkpoint**: 自动续期无感刷新正常工作，冷启动与热启动恢复校验正确，Token 过期时能正确跳转登录页
 
@@ -133,12 +133,12 @@
 
 ### 后端实现
 
-- [ ] T033 [P] [US4] 创建用户资料路由文件 server/src/routes/user.ts，注册：GET /api/user/profile、PUT /api/user/profile、POST /api/user/avatar（含 multer 中间件，限制 jpg/png，5MB）
-- [ ] T034 [US4] 实现用户资料业务逻辑 server/src/services/userService.ts（getProfile：返回脱敏手机号；updateProfile：更新 nickname；uploadAvatar：保存文件路径至 User.avatar；均需校验 userId 一致性，保障数据隔离）
+- [x] T033 [P] [US4] 创建用户资料路由文件 server/src/routes/user.ts，注册：GET /api/user/profile、PUT /api/user/profile、POST /api/user/avatar（含 multer 中间件，限制 jpg/png，5MB）
+- [x] T034 [US4] 实现用户资料业务逻辑 server/src/services/userService.ts（getProfile：返回脱敏手机号；updateProfile：更新 nickname；uploadAvatar：保存文件路径至 User.avatar；均需校验 userId 一致性，保障数据隔离）
 
 ### 前端实现（按设计稿布局与 token 契约还原 mine.png）
 
-- [ ] T035 [US4] 创建个人中心页面 client/src/pages/mine/index.vue，并抽取全局底部导航与知识点录入悬浮按钮到 client/src/components/shared/navigation/AppTabBar.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue，按设计稿布局与 token 契约还原界面：
+- [x] T035 [US4] 创建个人中心页面 client/src/pages/mine/index.vue，并抽取全局底部导航与知识点录入悬浮按钮到 client/src/components/shared/navigation/AppTabBar.vue、client/src/components/shared/navigation/KnowledgeEntryFab.vue，按设计稿布局与 token 契约还原界面：
   - 状态栏与页面顶部背景使用 `brand-gradient` 相关 token，覆盖状态栏 + 200rpx 高度
   - 用户信息区头像圆形直径 128rpx，边框、昵称、手机号脱敏展示分别使用 `on-brand` / `on-brand-muted` 等 token
   - 功能列表卡片圆角 24rpx、水平边距 24rpx、距顶部信息区 -40rpx 上浮，背景与阴影分别使用 `surface-card` 和 `shadow-card` token
@@ -149,8 +149,8 @@
   - 当首页或复习模块未交付时，共享导航必须进入临时占位页或展示明确的不可用提示，不允许静默失败
   - 底部「退出登录」按钮高度 96rpx、圆角 48rpx，使用 `danger-surface` 与 `danger-text` token，距列表 48rpx
   - 页面底部安全区域适配 `padding-bottom: env(safe-area-inset-bottom)`
-- [ ] T036 [US4] 实现个人中心数据逻辑 composable client/src/composables/useProfile.ts（fetchProfile：获取并填充用户信息；updateNickname：调用 PUT /api/user/profile → 更新 store；uploadAvatar：uni.chooseImage → 上传 multipart/form-data → 更新 store；同步更新 Pinia store）
-- [ ] T037 [US4] 在 client/src/pages/mine/index.vue 中引入 useProfile，绑定数据并接入头像点击上传、昵称点击弹窗编辑、底部导航切换和右下角知识点录入按钮跳转交互；当首页/复习目标未实现时，统一进入占位页或展示不可用提示
+- [x] T036 [US4] 实现个人中心数据逻辑 composable client/src/composables/useProfile.ts（fetchProfile：获取并填充用户信息；updateNickname：调用 PUT /api/user/profile → 更新 store；uploadAvatar：uni.chooseImage → 上传 multipart/form-data → 更新 store；同步更新 Pinia store）
+- [x] T037 [US4] 在 client/src/pages/mine/index.vue 中引入 useProfile，绑定数据并接入头像点击上传、昵称点击弹窗编辑、底部导航切换和右下角知识点录入按钮跳转交互；当首页/复习目标未实现时，统一进入占位页或展示不可用提示
 
 **Checkpoint**: 个人中心 UI 与设计稿布局及 token 契约一致，资料修改后全局同步，且共享底部导航/知识点录入入口及未交付页面回退契约建立完成
 
@@ -164,16 +164,16 @@
 
 ### 后端实现
 
-- [ ] T038 [P] [US5] 在 server/src/routes/auth.ts 中注册以下端点：
+- [x] T038 [P] [US5] 在 server/src/routes/auth.ts 中注册以下端点：
   - POST /api/auth/password/set（需 auth 中间件，authService.setPassword：首次设置密码，bcrypt 加密存储）
   - POST /api/auth/password/change（需 auth 中间件，authService.changePassword：验证旧密码，更新新密码，写 SecurityLog）
   - POST /api/auth/password/reset（无需登录，authService.resetPassword：验证手机号验证码，重置密码，写 SecurityLog）
 
 ### 前端实现
 
-- [ ] T039 [US5] 创建密码设置/修改/重置页面 client/src/pages/mine/password.vue（布局参考个人中心卡片风格：白色卡片，圆角输入框，主色渐变确认按钮；三种模式通过 route query 区分）
-- [ ] T040 [US5] 在 client/src/composables/useAuth.ts 中实现 setPassword / changePassword / resetPassword 函数（表单校验：密码 8 位含字母数字；调用对应 API；成功提示；修改密码成功后执行 logout 流程）
-- [ ] T041 [US5] 在 client/src/pages/mine/index.vue 中为「修改密码」cell 添加导航，绑定退出登录按钮（调用 useAuth.logout → 清除 store → 跳转登录页，显示确认弹窗）
+- [x] T039 [US5] 创建密码设置/修改/重置页面 client/src/pages/mine/password.vue（布局参考个人中心卡片风格：白色卡片，圆角输入框，主色渐变确认按钮；三种模式通过 route query 区分）
+- [x] T040 [US5] 在 client/src/composables/useAuth.ts 中实现 setPassword / changePassword / resetPassword 函数（表单校验：密码 8 位含字母数字；调用对应 API；成功提示；修改密码成功后执行 logout 流程）
+- [x] T041 [US5] 在 client/src/pages/mine/index.vue 中为「修改密码」cell 添加导航，绑定退出登录按钮（调用 useAuth.logout → 清除 store → 跳转登录页，显示确认弹窗）
 
 **Checkpoint**: 密码设置/修改/重置/退出登录全流程正常运行
 
@@ -187,9 +187,9 @@
 
 ### 后端实现
 
-- [ ] T042 [US6] 审查并加固 server/src/routes/user.ts 所有端点：确保每个需要认证的接口均使用 auth 中间件，且 userService 方法均以 req.userId 作为查询条件
-- [ ] T043 [US6] 审查 server/src/services/userService.ts：确保 getProfile / updateProfile / uploadAvatar 均通过 `{ _id: userId }` 过滤，不接受客户端传入的 userId 参数
-- [ ] T044 [US6] 在 server/src/middlewares/auth.ts 中加固：Token 解析失败返回标准 401 响应（使用 response.ts 封装），不泄露具体错误原因
+- [x] T042 [US6] 审查并加固 server/src/routes/user.ts 所有端点：确保每个需要认证的接口均使用 auth 中间件，且 userService 方法均以 req.userId 作为查询条件
+- [x] T043 [US6] 审查 server/src/services/userService.ts：确保 getProfile / updateProfile / uploadAvatar 均通过 `{ _id: userId }` 过滤，不接受客户端传入的 userId 参数
+- [x] T044 [US6] 在 server/src/middlewares/auth.ts 中加固：Token 解析失败返回标准 401 响应（使用 response.ts 封装），不泄露具体错误原因
 
 **Checkpoint**: 数据隔离零违规，所有用户只能操作自己的数据
 
@@ -203,12 +203,12 @@
 
 ### 后端实现
 
-- [ ] T045 [US4] 在 server/src/routes/user.ts 中注册 POST /api/user/change-phone 端点（需 auth 中间件，userService.changePhone：验证原手机验证码、验证新手机验证码、更新 User.phone、写 SecurityLog）
+- [x] T045 [US4] 在 server/src/routes/user.ts 中注册 POST /api/user/change-phone 端点（需 auth 中间件，userService.changePhone：验证原手机验证码、验证新手机验证码、更新 User.phone、写 SecurityLog）
 
 ### 前端实现
 
-- [ ] T046 [US4] 创建换绑手机号页面 client/src/pages/mine/change-phone.vue（两步流程：步骤1验证原手机号 + 步骤2绑定新手机号；进度条显示当前步骤；样式参考登录页卡片风格）
-- [ ] T047 [US4] 在 client/src/pages/mine/index.vue 中为「换绑手机号」cell 添加导航
+- [x] T046 [US4] 创建换绑手机号页面 client/src/pages/mine/change-phone.vue（两步流程：步骤1验证原手机号 + 步骤2绑定新手机号；进度条显示当前步骤；样式参考登录页卡片风格）
+- [x] T047 [US4] 在 client/src/pages/mine/index.vue 中为「换绑手机号」cell 添加导航
 
 **Checkpoint**: 换绑手机号完整流程正常，store 中手机号更新
 
@@ -218,12 +218,12 @@
 
 **Purpose**: 体验优化、错误兜底、可访问性、性能与验证
 
-- [ ] T048 [P] 在前端所有页面添加网络异常提示（uni.showToast），request.ts 中统一捕获网络错误并展示友好提示
-- [ ] T049 [P] 审查并补齐 client/uno.config.ts 中的语义化视觉 token（如 `page-bg`、`text-primary`、`surface-card`、`brand-primary`、`brand-gradient`、`shadow-card`、`danger-surface`、`danger-text`），替换所有页面级硬编码色值/阴影引用
-- [ ] T050 [P] 在 server/src/index.ts 中添加静态文件服务以提供 /uploads/avatars 目录的头像访问
-- [ ] T051 [P] 登录页按钮添加防抖（300ms），避免重复提交；获取验证码按钮倒计时期间禁用并显示剩余秒数（格式：`60s 后重新获取`）
-- [ ] T052 [P] 个人中心页下拉刷新实现（uni-app `onPullDownRefresh`，刷新后重新调用 fetchProfile）
-- [ ] T053 为 server/ 添加基础 README，说明启动命令、环境变量和 API 端点列表
+- [x] T048 [P] 在前端所有页面添加网络异常提示（uni.showToast），request.ts 中统一捕获网络错误并展示友好提示
+- [x] T049 [P] 审查并补齐 client/uno.config.ts 中的语义化视觉 token（如 `page-bg`、`text-primary`、`surface-card`、`brand-primary`、`brand-gradient`、`shadow-card`、`danger-surface`、`danger-text`），替换所有页面级硬编码色值/阴影引用
+- [x] T050 [P] 在 server/src/index.ts 中添加静态文件服务以提供 /uploads/avatars 目录的头像访问
+- [x] T051 [P] 登录页按钮添加防抖（300ms），避免重复提交；获取验证码按钮倒计时期间禁用并显示剩余秒数（格式：`60s 后重新获取`）
+- [x] T052 [P] 个人中心页下拉刷新实现（uni-app `onPullDownRefresh`，刷新后重新调用 fetchProfile）
+- [x] T053 为 server/ 添加基础 README，说明启动命令、环境变量和 API 端点列表
 
 ---
 
@@ -231,13 +231,13 @@
 
 **Purpose**: 为用户故事、性能指标和验收标准建立可重复验证路径
 
-- [ ] T054 [P] 创建后端测试基座 server/tests/helpers/testApp.ts 与 server/tests/helpers/fixtures.ts（封装测试应用、数据库清理、验证码/用户工厂）
-- [ ] T055 [US1] 创建注册与验证码集成测试 server/tests/integration/auth.register.test.ts（覆盖成功注册、手机号格式错误、重复注册、验证码失效、60 秒限频）
-- [ ] T056 [US2] [US3] 创建登录与会话集成测试 server/tests/integration/auth.session.test.ts（覆盖验证码登录、密码登录、错误 5 次锁定、refresh 成功/失败、logout 后 token 失效、前后台恢复触发校验）
-- [ ] T057 [US4] [US6] 创建资料与数据隔离集成测试 server/tests/integration/user.profile-isolation.test.ts（覆盖获取资料、修改昵称、上传头像、跨用户访问被拒绝）
-- [ ] T058 [US5] 创建密码与安全日志集成测试 server/tests/integration/auth.password.test.ts（覆盖 set/change/reset password、logout、安全日志写入）
-- [ ] T059 [P] 在 specs/001-user-login-account/quickstart.md 中补充 SC-003 / SC-004 的验收脚本，明确样本量、计时起点、计时终点与通过阈值
-- [ ] T060 [P] 创建核心接口压测脚本 server/tests/performance/auth-profile.load.js（覆盖 /api/auth/login、/api/auth/refresh、/api/user/profile）
+- [x] T054 [P] 创建后端测试基座 server/tests/helpers/testApp.ts 与 server/tests/helpers/fixtures.ts（封装测试应用、数据库清理、验证码/用户工厂）
+- [x] T055 [US1] 创建注册与验证码集成测试 server/tests/integration/auth.register.test.ts（覆盖成功注册、手机号格式错误、重复注册、验证码失效、60 秒限频）
+- [x] T056 [US2] [US3] 创建登录与会话集成测试 server/tests/integration/auth.session.test.ts（覆盖验证码登录、密码登录、错误 5 次锁定、refresh 成功/失败、logout 后 token 失效、前后台恢复触发校验）
+- [x] T057 [US4] [US6] 创建资料与数据隔离集成测试 server/tests/integration/user.profile-isolation.test.ts（覆盖获取资料、修改昵称、上传头像、跨用户访问被拒绝）
+- [x] T058 [US5] 创建密码与安全日志集成测试 server/tests/integration/auth.password.test.ts（覆盖 set/change/reset password、logout、安全日志写入）
+- [x] T059 [P] 在 specs/001-user-login-account/quickstart.md 中补充 SC-003 / SC-004 的验收脚本，明确样本量、计时起点、计时终点与通过阈值
+- [x] T060 [P] 创建核心接口压测脚本 server/tests/performance/auth-profile.load.js（覆盖 /api/auth/login、/api/auth/refresh、/api/user/profile）
 - [ ] T061 执行 SC-003 / SC-004 验证并将结果记录到 specs/001-user-login-account/quickstart.md 或 research.md
 - [ ] T062 执行 10,000 并发会话压测并将结果记录到 specs/001-user-login-account/research.md，校验 SC-005
 

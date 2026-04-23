@@ -2,7 +2,10 @@
 node_modules/
 
 # Environment
-# .env
+.env*
+!.env.example
+
+# Local overrides
 .env.local
 
 # Build output
@@ -23,6 +26,13 @@ Thumbs.db
 # Logs
 *.log
 npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# Coverage and temp
+coverage/
+*.tmp
+*.swp
 
 # Tesseract data
 tessdata/

@@ -1,10 +1,12 @@
-import express from "express";
-import cors from "cors";
+import fs from "node:fs/promises";
 import dotenv from "dotenv";
+import mongoose from "mongoose";
 import path from "path";
 import { fileURLToPath } from "url";
 import { ChatOpenRouter } from "@langchain/openrouter";
 import { HumanMessage } from "@langchain/core/messages";
+
+import { avatarUploadDir, createApp } from "./app.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -14,28 +16,44 @@ dotenv.config({
   path: path.join(__dirname, "../../.env"),
 });
 
-const app = express();
-const PORT = process.env.PORT || 3000;
+const app = createApp();
+const PORT = Number(process.env.PORT ?? 3000);
 
-// 中间件
-app.use(cors());
-app.use(express.json());
+async function probeOpenRouter() {
+  if (!process.env.OPENROUTER_MODEL || !process.env.OPENROUTER_API_KEY) {
+    return;
+  }
 
-// ====================== OpenRouter 初始化 ======================
-const llm = new ChatOpenRouter({
-  model: process.env.OPENROUTER_MODEL!,
-  apiKey: process.env.OPENROUTER_API_KEY!,
-  temperature: 0.7,
-});
+  const llm = new ChatOpenRouter({
+    model: process.env.OPENROUTER_MODEL,
+    apiKey: process.env.OPENROUTER_API_KEY,
+    temperature: 0.7,
+  });
 
-// ====================== 启动服务 & 控制台自检 ======================
-app.listen(PORT, async () => {
-  console.log(`\n✅ 服务启动成功：http://localhost:${PORT}`);
-  // 自动测试 AI 是否连通
   try {
     const test = await llm.invoke([new HumanMessage("hi")]);
-    console.log("✅ OpenRouter 大模型接入成功！首次响应：", test.content);
-  } catch (err) {
-    console.error("❌ OpenRouter 接入失败：", (err as Error).message);
+    console.log("✅ OpenRouter 大模型接入成功：", test.content);
+  } catch (error) {
+    console.error("❌ OpenRouter 接入失败：", (error as Error).message);
   }
+}
+
+async function bootstrap() {
+  if (!process.env.MONGODB_URI) {
+    throw new Error("MONGODB_URI is not configured");
+  }
+
+  await fs.mkdir(avatarUploadDir, { recursive: true });
+  await mongoose.connect(process.env.MONGODB_URI);
+  console.log("✅ MongoDB 连接成功");
+
+  app.listen(PORT, async () => {
+    console.log(`\n✅ 服务启动成功：http://localhost:${PORT}`);
+    await probeOpenRouter();
+  });
+}
+
+bootstrap().catch((error) => {
+  console.error("❌ 服务启动失败：", (error as Error).message);
+  process.exit(1);
 });
